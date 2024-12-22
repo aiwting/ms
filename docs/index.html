@@ -6,35 +6,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <!-- 默认主题-->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-dark-mode@latest/dist/style.min.css"/>
+  <link rel="stylesheet" href="_css/custom.css">
 </head>
 <body>
+  <!-- 加载页面等待时显示的内容 -->
   <div id="app"></div>
   <script>
     window.$docsify = {
-      name: 'molecular simulation',
-      repo: '',
-      loadSidebar: true, // 侧边栏
-      subMaxLevel: 2,
+      name: 'MS', // 侧边栏顶部的标题
+//      nameLink: '/', // 点击标题后的跳转地址
+      repo: '', // 右上角仓库连接
+//      notFoundPage: true, //// 加载_404.md
+//      logo: '/_media/icon.svg', // 侧边栏左侧的logo
+      loadSidebar: true, // 左侧边栏
+      maxLevel: 6, // 最大标题层级
+//      subMaxLevel: 2, // 侧边栏最大标题层级
+      auto2top: true, // 切换页面后跳回页面顶部
+      sidebarDisplayLevel: 4, // 目录层级
       coverpage: true, // 封面
+      homepage: 'README.md', // 指定开始页
       onlyCover: false, // 只在访问主页时加载封面
       loadNavbar: true, // 导航栏
-// 暗模式
-      themeColor: "#42b983",
-      darkMode: {
-        dark: {
-          background: "#1c2022",
-          toggleBtnBg: "#34495e",
-          textColor: "#b4b4b4"
-        },
-        light: {
-          background: "white",
-          toggleBtnBg: "var(--theme-color)",
-          textColor: "var(--theme-color)"
-        }
-      },
-// 暗模式
+      mergeNavbar: true, // 移动设备合并导航栏到侧边栏
 // docsify-copy-code (defaults)
       copyCode: {
         buttonText: 'Copy',
@@ -49,6 +44,41 @@
           tabComments: true, // default
           tabHeadings: true // default
         },
+// 全文搜索
+      search: {
+          maxAge: 86400000,
+          paths: 'auto',
+          placeholder: '搜索',
+          noData: '找不到结果',
+          depth: 4,
+          hideOtherSidebarContent: false,
+          namespace: 'ms'
+      },
+// 回到顶部
+      scrollToTop: {
+        auto: true, // 自动隐藏按钮
+//        text: 'Top',
+        icon: 'arrow-up-1',
+        right: 10,
+        bottom: 15,
+        width: 40,
+        height: 40,
+        offset: 500 // 页面垂直滚动条的偏移量大于该属性值时显示按钮
+      },
+// 页脚
+      footer: {
+              copy: '<span>&copy; 2024</span>',
+              auth: 'aiwting',
+              pre: '<hr/>',
+              style: 'text-align: right;',
+              class: 'className',
+      },    
+// 右侧栏
+      toc: {
+          tocMaxLevel: 5,
+          target: "h2, h3, h4, h5, h6",
+          ignoreHeaders:  ['<!-- {docsify-ignore} -->', '<!-- {docsify-ignore-all} -->']
+        },
     }
   </script>
   <!-- Docsify v4 -->
@@ -57,10 +87,8 @@
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
   <!-- 复制代码块 -->
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  <!-- 暗模式 -->
-  <script src="//cdn.jsdelivr.net/npm/docsify-dark-mode@latest/dist/index.min.js"></script>
-  <!-- 幻灯片 -->
-  <script src="//unpkg.com/docsify-slides/dist/docsify-slides.min.js"></script>
+  <!-- 导航栏 -->
+  <link rel="stylesheet" href="_css/navbar-fixed.css">
 <!-- 数学方程 -->
 <script src="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
@@ -69,10 +97,46 @@
 <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
 <!-- or <script src="//cdn.jsdelivr.net/gh/upupming/docsify-katex@latest/dist/docsify-katex.js"></script> -->
 <!-- 数学方程 -->
-<!-- 搜索 -->
-<!-- 搜索 -->
-<!-- docsify-tabs (latest v1.x.x) -->
-<script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
-
+  <!-- 搜索 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <!-- 搜索 -->
+  <!-- 选项卡 docsify-tabs (latest v1.x.x) -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+  <!-- 左侧边栏折叠 -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar-folder.min.css" />
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  <!-- 右侧栏 -->
+  <link rel="stylesheet" href="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/light.css">
+  <script src="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/docsify-plugin-toc.min.js"></script>
+  <!-- 代码显示优化 https://github.com/dolanmiu/docsify-terminal-block -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-terminal-block@1.0.3"></script>
+  <!-- 回到顶部 -->
+  <script src="//unpkg.com/@zhg-x/docsify-plugins@1.0.2/src/scroll-to-top.js"></script>
+<!-- 暗模式 -->
+<script src="_js/dark-switcher.js"></script>
+<style>
+  :root {
+    --dark-base-background: #222;
+    --dark-base-color: #bbc0c4;
+    --dark-theme-color: var(--theme-color, #42b983);
+    --dark-code-color: var(--dark-color);
+    --dark-heading-color: var(--dark-theme-color);
+    --dark-cover-background: #000000a8;
+    --dark-code-background: #303030;
+    --dark-tip-background: #2c0000;
+    --dark-warn-background: #005842;
+    --dark-icon-size: 30px;
+    --dark-icon-transition: .1s ease-in-out .1s;
+    --dark-moon-color: #000000;
+    --dark-sun-color: #ffffff;
+    --dark-moon-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 16 16'%3E%3Cpath fill='currentColor' d='M9.598 1.591a.749.749 0 0 1 .785-.175 7.001 7.001 0 1 1-8.967 8.967.75.75 0 0 1 .961-.96 5.5 5.5 0 0 0 7.046-7.046.75.75 0 0 1 .175-.786m1.616 1.945a7 7 0 0 1-7.678 7.678 5.499 5.499 0 1 0 7.678-7.678'/%3E%3C/svg%3E");
+    --dark-sun-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 16 16'%3E%3Cpath fill='currentColor' d='M8 12a4 4 0 1 1 0-8a4 4 0 0 1 0 8m0-1.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5m5.657-8.157a.75.75 0 0 1 0 1.061l-1.061 1.06a.749.749 0 0 1-1.275-.326a.749.749 0 0 1 .215-.734l1.06-1.06a.75.75 0 0 1 1.06 0Zm-9.193 9.193a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0M8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0M3 8a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 3 8m13 0a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 16 8m-8 5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13m3.536-1.464a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061M2.343 2.343a.75.75 0 0 1 1.061 0l1.06 1.061a.751.751 0 0 1-.018 1.042a.751.751 0 0 1-1.042.018l-1.06-1.06a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E");
+  }
+</style>
+<!-- 暗模式 -->
+  <!-- 页脚 -->
+  <script src="//unpkg.com/docsify-footer-enh/dist/docsify-footer-enh.min.js"></script>
+  <!-- 分页 --> <!-- slide:break-# -->
+  <script src="//unpkg.com/docsify-slides/dist/docsify-slides.min.js"></script>
 </body>
 </html>

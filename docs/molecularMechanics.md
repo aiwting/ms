@@ -52,7 +52,7 @@
 	- Amber系列
 	- Charmm系列
 - 常用的糖类力场
-	- ==GLYCAM==
+	- GLYCAM
 	- Charmm系列
 	- OPLS系列
 - 其它体系的力场

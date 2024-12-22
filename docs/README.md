@@ -1,3 +1,3 @@
-# MS
+# Molecular Simulation
 >试图介绍关于分子模拟的一切
 # 
