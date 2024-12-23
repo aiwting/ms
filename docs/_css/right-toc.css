@@ -1,6 +1,6 @@
 @media only screen and (max-width: 1299px) {
     aside.toc-nav {
-      max-width: 45px;
+      max-width: 60px;
       opacity: 0.6;
       right: 0 !important;
       margin-right: 0 !important;
@@ -14,16 +14,16 @@
   
   @media only screen and (min-width: 1300px) {
     section.content {
-      padding-right: 250px;
+      padding-right: 190px;
     }
   }
   
   aside.toc-nav {
     position: fixed;
     top: 70px;
-    right: 3%;
-    margin-right: 20px;
-    width: 250px;
+    right: 0% ;
+    margin-right: 5px;
+    width: 250px ;
     z-index: 999999;
     align-self: flex-start;
     flex: 0 0 auto;

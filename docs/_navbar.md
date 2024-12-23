@@ -1,5 +1,5 @@
 <!-- Logo -->
-[![](_media/icon.svg)](/)
+[![](_media/icon.png)](/)
 
 <!-- Title -->
 [MS](/)
