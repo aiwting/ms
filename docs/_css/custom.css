@@ -16,3 +16,7 @@
 .search {
     margin-bottom: 10px;
 }
+/*右目录滚动条*/
+.toc-nav::-webkit-scrollbar {
+    width: 4px;
+}

@@ -1,12 +1,12 @@
-## 认识GROMACS
+# 认识GROMACS
 >What is gromacs: A **free and open-source** software suite for high-performance molecular dynamics and output analysis.
 
 GROMACS是一套功能齐全的程序，用于执行分子动力学模拟，即使用牛顿运动方程模拟具有数亿到数百万个粒子的系统的行为。它主要用于**蛋白质、脂质和聚合物的研究**，但也可以应用于各种化学和生物学研究问题。
 
-## GROMACS的安装
-### GROMACS的版本问题
+# GROMACS的安装
+## GROMACS的版本问题
 
-### 在Windows系统安装
+## 在Windows系统安装
 GROMACS一般都是在Linux下运行，效率也更高，优先选择Linux系统  
 如果实在不想安装Linux系统，有以下解决方案：略有性能损失。  
 从源码编译原生的Windows版gromacs：此方法过于复杂，别试！如果想找罪受就试逝。  
@@ -15,13 +15,13 @@ GROMACS一般都是在Linux下运行，效率也更高，优先选择Linux系统
 > [http://sobereva.com/soft/gmx/gmx2020.3_AVX_CUD A_win64.rar](http://sobereva.com/soft/gmx/gmx2020.3_AVX_CUDA_win64.rar)  
 > 2020.6 CUDA GPU加速版，AVX2指令集（88 MB）：
 > [http://sobereva.com/soft/gmx/gmx2020.6_AVX2_CUDA_win64.rar](http://sobereva.com/soft/gmx/gmx2020.6_AVX2_CUDA_win64.rar)
-### 在Linux系统安装
+## 在Linux系统安装
 首先[安装一个Linux环境]()，再进行以下的步骤
 1. 从源码编译安装（理论上效率最高）
 2. 某些发行商预编译的版本（可忽略的性能损失）
 这里我们选择最简单最直接的方式2，通过 [Conda](https://docs.anaconda.com/miniconda/) 包管理工具，直接搭建一个用于分子模拟虚拟环境。
 >这个环境可以不仅仅包含GROMACS，还能安装其它模拟过程中需要用到的工具，因此推荐使用该方式
-#### 安装conda环境
+### 安装conda环境
 ```
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
@@ -35,7 +35,7 @@ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
 conda activate
 ```
-#### 分子模拟程序包安装
+### 分子模拟程序包安装
 1. 运行命令`conda search gromacs`可以产看有哪些 GROMACS 版本，输出如下：
 |gromacs版本| |
 ------------|-------------------------------------------------------------------
@@ -106,13 +106,13 @@ For help on a command, use 'gmx help <command>'.
 
 GROMACS reminds you: "...."
 ```
-## GROMACS的文件
+# GROMACS的文件
 gromacs各种文件的格式可以参考：
 官方文档：
 中文：[GROMACS中文手册|Jerkwin](https://jerkwin.github.io/GMX/GMXman-5/#561-%E6%AE%8B%E5%9F%BA%E6%95%B0%E6%8D%AE%E5%BA%93)，不全版本落后
-### 力场参数文件
+## 力场参数文件
 在 gromacs 安装目录的share/gromacs/top目录下存放着力场相关文件：包括各种 .ff 文件夹以及许多以 .dat为扩展名的纯文本帮助文件。
-#### residuetypes.dat
+### residuetypes.dat
 记录了支持的残基种类：残基名 种类
 ```terminal
 GLY	Protein
@@ -128,7 +128,7 @@ RGB	Cellulose
 NGB	Cellulose
 IBG	Cellulose
 ```
-#### specbond.dat
+### specbond.dat
 Special bonds，涉及残基与其他残基的特殊连接。pdb2gmx 用于生成残基间键的主要机制依赖于不同残基中主链原子的头尾连接来构建大分子。 在某些情况下（例如二硫键、血红素基团、支化聚合物），有必要创建不在主链上的残基间键。 文件specbond.dat 负责此功能。 残基必须属于相同的分子类型。
 第一行表示文件中的条目数。如果添加新条目，请确保递增此数字。
 文件中的其余行提键连接的规范，行的格式如下：  
@@ -148,7 +148,7 @@ IBG	    O4	    1       IBG	    C1      1       1.475   IBG	    IBG
 IBG     O4      1       NBG     C1      1       1.475   IBG     NBG
 ```
 注意：residuetypes.dat和specbond.dat要放在工作目录下，而不是力场文件夹中
-#### atomtypes.atp
+### atomtypes.atp
 原子类型文件。每个力场定义了一组原子类型，它们有一个特有的名称或符号，以及质量。可以在该文件中更改和/或添加原子类型。此文件仅供gmx pdb2gmx使用。原子类型的交互参数通过拓扑文件中的`[ atomtypes ]`部分设置
 ```terminal
 原子名             原子质量   ; 描述
@@ -160,7 +160,7 @@ CC                12.01000	; sp2 aromatic C, 5 memb. ring HIS
 
 ```
 注意：文件结尾只能空一行，空行多了会报错
-#### \*.itp
+### \*.itp
 - 被主拓扑文件（.top）包含的分拓扑文件，一般包含某个特定分子的类型。与top文件类似，一般用来具体记录体系的拓扑信息和力场信息，然后通过include指令写在top文件中，它不引用其他力场文件，同时包含`system`，`molecule`等拓扑字节。
 - 目的是为了方便运用某一个常用分子的拓扑或者使 topol.top 文件结构更加简洁，可以把它单独写入一个 .itp 文件中。.itp文件仅包含一个特定分子的信息，可以被任意引用，这样就避免了每次都需要使用pdb2gmx生成拓扑或者重复地复制粘贴。一般力场中都会提供水分子、离子（有些还提供少许脂质分子）的 .itp 文件两部分组成：
   - `[ moleculetype ]`：定义分子名称和非键排除（nrexcl，排除相邻nrexcl个键的非键相互作用）。
@@ -190,10 +190,10 @@ URE       3
      1     7     6     8   4
 
 ```
-#### ffbonded.itp
+### ffbonded.itp
 记录了所有原子的所有可能的键合信息
 
-#### \*.rtp
+### \*.rtp
 - 包含构建块拓扑的文件：具有部分电荷和键描述的残留拓扑。
 - residue topology database entry(残基拓扑数据库条目)对于独立分子（例如甲醛）或肽（标准或非标准）都是必需的。该条目定义了残基​​的原子类型、连接性、键合和非键合相互作用类型，并且是使用 pdb2gmx 构建top文件所必需的。残留物数据库条目可能会丢失，仅仅是因为数据库根本不包含残留物，或者因为名称不同。
 - gmx pdb2gmx需要这样的 rtp文件来为 pdb文件中包含的蛋白质创建 top文件，如果希望使用pdb2gmx自动生成拓扑，则必须确保在所需的力场中存在适当的 rtp条目，并且与尝试使用的残基具有相同的名称。
@@ -226,7 +226,7 @@ URE       3
 >注意：  
 >原子名称：按照结构及连接关系区分原子
 >原子类型：按照化学环境区分原子
-#### \*.r2b
+### \*.r2b
 将残基名称翻译为在不同力场中具有不同名称的残基，或根据其质子化状态具有不同名称的残基。可以包含2列或5列。双列格式的第一列是残基名称，第二列是结构单元名称。5列格式具有3个额外的柱，N-末端、C-末端和双末端（单个残基分子）。
 ```terminal
 ; rtp residue to rtp building block table
@@ -237,7 +237,7 @@ ARG    ARG   NARG  CARG  -
 ARGN   -     -     -     -
 ASN    ASN   NASN  CASN  -
 ```
-#### \*.arn
+### \*.arn
 将原子从其力场名称重命名为IUPAC/PDB定义的名称，以便于可视化和识别
 ```terminal
 ; atom renaming specification
@@ -248,7 +248,7 @@ IBG	H3O  HO3
 IBG	H4O  HO4
 IBG	H6O  HO6
 ```
-#### \*.hdb
+### \*.hdb
 氢数据库。当生成最初丢失或用—ignh删除的氢原子时，gmx pdb2gmx（第232页）需要此文件。
 ```terminal
 HOH	1
@@ -261,9 +261,9 @@ NME	2
 1	1	H	N	-C	CH3	
 3	4	HH3	CH3	N	-C
 ```
-#### \*.tdb
+### \*.tdb
 关于可置于多肽链末端的氨基酸末端的信息。分为C端和N端，.c.tdb和.n.tdb
-#### \*.vsd：
+### \*.vsd：
 包含如何在力场中的许多不同分子上放置虚拟站点的信息
 ```terminal
 [ CH3 ]
@@ -273,7 +273,7 @@ NME	2
    CT           CA              MCH3
    CT           CB              MCH3
 ```
-#### \*.n2t
+### \*.n2t
 用于在结构文件中找到的原子名称和相应的原子类型之间执行最初的转换。这对于使用gmx x2top等实用程序非常有用
 ```terminal
 ; AMBER14sb format parameters for Cellulose residue (beta-glucose) derived from GLYCAM06  
@@ -287,8 +287,8 @@ C	Cg	0.0000	12.01	4	C 0.15 H 0.10 H 0.10 O 0.14
 O	Oh	0.0000	16.00	2	C 0.145 H 0.095
 H	Ho	0.0000	1.008	1	O 0.09
 ```
-### 模拟相关文件
-#### \*.top
+## 模拟相关文件
+### \*.top
 - Molecular Topology file：由gmx pdb2gmx命令生成，包含肽或蛋白质中所有相互作用的完整描述。
 - 该文件主要是记录体系的拓扑信息和力场信息，并且包括体系中各种类型的分子/原子数目
 - 拓扑文件包含有关每个原子位点如何与其他原子位点相互作用的信息，无论是非键合相互作用还是键合相互作用。非键合相互作用包括范德华相互作用和库仑相互作用。键合相互作用包括键、角和二面体。这些信息由力场提供。
@@ -307,11 +307,11 @@ H	Ho	0.0000	1.008	1	O 0.09
     4. 水拓扑水模型水的位置限制
     5. 金属拓扑
 - gmx x2top也能生成top文件
-#### \*.gro
+### \*.gro
 - Molecular Structure file：一般只包含原子坐标信息，相对于pdb添加了H原子
 - 是gromacs独有的分子坐标文件
 - 在GROMACS格式(.gro)中, 最后一行指定单位晶胞的形状, 并总是使用三斜矩阵的表示方法, 其中前面的三个数字指定对角元素(xx, yy, zz), 后面的六个数字指定非对角元素(xy, xz, yx, yz, zx, zy).
-#### \*.pdb
+### \*.pdb
 - 这是体系的初始坐标文件，主要是包括了体系中所有原子的坐标、原子序号、残基名称等等这些基础信息，后面有可能会用到的.gro文件和.pdb文件其实差不多，只不过.pdb文件的信息全一点，新手可以先默认理解为这是记录体系的初始坐标的文件格式。
 - ATOM和HETATM记录了结构原子坐标信息，也是PDB文件中最重要的信息。ATOM记录的是标准氨基酸和核酸的结构坐标，而HETATM记录的是其他类型原子的结构坐标。
 pdb文件用于gmx pdb2gmx输入只需要原子坐标，键参数是通过力场重新生成的。
@@ -334,22 +334,22 @@ ATOM      2  CA  LYS A   1      35.892  21.073 -11.427    1.00 21.12    C
 12. 原子的元素
 ```
 - ATOM和HETATM记录了结构原子坐标信息，也是PDB文件中最重要的信息。ATOM记录的是标准氨基酸和核酸的结构坐标，而HETATM记录的是其他类型原子的结构坐标。
-#### \*.mdp
+### \*.mdp
 - Molecular Dynamics parameter file：动力学参数文件
 - (Molecular dynamics parameters)这个格式的文件主要是记录模拟体系中的一些参数设置，该文件包含关于分子动力学模拟的全部信息。**例如，时间步长，步数，温度，压力**等等。该文件经过 gmx grompp 命令后将被注释
-#### \*.ndx
+### \*.ndx
 Index file：有时需要一个索引文件来指定原子组上的动作(例如温度耦合、加速、冻结)。
 通常，默认索引组就足够了
-####  \*.tpr
+###  \*.tpr
 - Run input file：由gmx grompp命令将结构文件、拓扑文件、参数文件、索引文件(可选)结合生成运行输入文件。
 - 最终一步分子动力学模拟的输入文件Run input file (.tpr)，**二进制**，该文件主要是将模拟所需的体系信息打包。.tpr文件用途较广，不仅用于跑模拟程序，在gromacs中还可以用来作为参考文件进行数据处理。内容包含模拟的初始结构，分子拓扑，和所有的模拟参数。利用Grompp程序连接分子结构文件(.gro)、拓扑文件(.top)、分子动力学参数文件(.mdp)和索引文件(.ndx)(可选)，即生成该文件。这个文件包含了开始使用 Gromacs 进行模拟的所有信息。这个文件就是一个大容器，把所有反应信息给到gromacs，然后通过电脑进行计算，这个如果没法生成，就没法后续的工作。
 - 该文件包含用GROMACS启动模拟所需的所有信息，包含系统中所有原子的所有参数。
-#### Trajectory file (.trr, .tng, or .xtc)
+### Trajectory file (.trr, .tng, or .xtc)
 轨迹文件：由gmx mdrun命令使用运行输入文件开始模拟，输出轨迹文件(trr)、日志文件(log)，也许还有检查点文件(cpt)。
 xtc：压缩轨迹文件，包含坐标、时间、模拟盒子信息。与trr文件相比xtc没有原子的速度和力的信息，文件会大大缩小，不影响后面生成RMSD RMSF等。
 trr：轨迹文件，包含信息更多，文件更大。trr包含了坐标、速度、受力
 
-## gromacs的力场
+# GROMACS的力场
 gromacs 原生自带四类15个力场：
 - AMBER03 protein, nucleic AMBER94 (Duan et al., J. Comp. Chem. 24, 1999-2012, 2003)
 - AMBER94 force field (Cornell et al., JACS 117, 5179-5197, 1995)
@@ -381,13 +381,13 @@ gromacs 原生自带四类15个力场：
     - *[链接1](https://zhuanlan.zhihu.com/p/93938854)*
     - *[链接2](http://bbs.keinsci.com/thread-15094-1-1.html)*
 
-## GROMACS的工作流程
+# GROMACS的工作流程
 ![](_media/2024-12-23-13-14-44.png)
-## GROMACS的结果分析方法
+# GROMACS的结果分析方法
 ![](_media/2024-12-23-12-43-01.png)
 
-## 拓展阅读
+# 拓展阅读
 - [GROMACS官网](https://www.gromacs.org/)
 - [GROMACS文档](https://manual.gromacs.org/current/index.html)
 - [GROMACS Tutorials](http://www.mdtutorials.com/)
-- [Gromacs入门讲解](https://www.bilibili.com/video/BV1Rc411o7Lz?vd_source=3cc29842852a8cd1cadfa25417f9d2d8)
+- [Gromacs入门讲解|bilibili](https://www.bilibili.com/video/BV1Rc411o7Lz?vd_source=3cc29842852a8cd1cadfa25417f9d2d8)

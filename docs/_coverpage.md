@@ -1,12 +1,12 @@
-![logo](_media/icon.svg)
+![logo](_media/dna256.gif)
 
 # Molecular Simulation <small> </small>
 
 > 理解分子模拟
 
-- Amber
 - GROMACS
-- Materials Stutio
+- Amber
+- ......
 
 [Resource]()
 [Overview](README.md)

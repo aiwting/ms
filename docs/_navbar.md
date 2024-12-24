@@ -1,20 +1,14 @@
 <!-- Logo -->
-[![](_media/icon.png)](/)
+[![](_media/h2o64.png)](/)
 
 <!-- Title -->
-[MS](/)
+[M S](/)
 
 <!-- Badge -->
 [![GitHub Repo stars](https://img.shields.io/github/stars/docsifyjs/docsify ':class=badge')](https://github.com/aiwting/ms/)
 
 - Getting started
-  - [Quick start](quickstart.md)
-  - [Writing more pages](more-pages.md)
-  - [Custom navbar](custom-navbar.md)
-  - [Cover page](cover.md)
-- Configuration
+  - [Home](README.md)
+  - [Quick start](README.md)
+- Resource
   - [Configuration](configuration.md)
-  - [Themes](themes.md)
-  - [Using plugins](plugins.md)
-  - [Markdown configuration](markdown.md)
-  - [Language highlight](language-highlight.md)

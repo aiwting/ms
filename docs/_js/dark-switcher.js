@@ -54,7 +54,8 @@ var css = `
 }
 button[onclick="docsifyDarkSwitcher()"] {
     position: fixed;
-    right: 15px;
+    overflow: clip;
+    right: 19px;
     bottom: 65px;
     border: none;
     cursor: pointer;
