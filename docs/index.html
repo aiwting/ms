@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MS</title>
+  <title>M S</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
@@ -16,14 +16,14 @@
   <div id="app"></div>
   <script>
     window.$docsify = {
-      name: '目录', // 侧边栏顶部的标题
+      name: 'Overview', // 侧边栏顶部的标题
       nameLink: '/docs/#/README', // 点击标题后的跳转地址
 //      notFoundPage: true, //// 加载_404.md
 //      logo: '/_media/md64.png', // 侧边栏左侧的logo
       themeColor: '#3F51B5', // 主题颜色
       loadSidebar: true, // 左侧边栏
       maxLevel: 6, // 最大标题层级
-      subMaxLevel: 2, // 侧边栏最大标题层级
+//      subMaxLevel: 2, // 侧边栏最大标题层级
       auto2top: true, // 切换页面后跳回页面顶部
       sidebarDisplayLevel: 4, // 目录层级
       coverpage: true, // 封面
@@ -88,6 +88,26 @@
           target: "h1, h2, h3, h4, h5, h6",
           ignoreHeaders:  ['<!-- {docsify-ignore} -->', '<!-- {docsify-ignore-all} -->']
         },
+// auth
+      auth: {
+        enable: false, // 是否开启
+        use: "sha256",
+        password: "d8d8a6d2e9e1fb99302b479a8fe540d4", // md5密码
+        title: "请输入密码以访问文档：", // 设置标题
+        paths: ["/aboutMS"] // 需要认证的路径，支持正则表达式匹配
+      },
+// 标题编号
+      autoHeaders: {
+        // Separator for header numbering (e.g., '.', '-', ')')
+        separator: '.',
+        // Boolean indicating if headers should be added to the sidebar
+        sidebar: true,
+        // Number of header levels to include (1 to 6) or an object with start and finish properties
+        levels: 6,
+        // levels: { start: 1, finish: 6 }
+        // Boolean to enable or disable debug messages
+        debug: false,
+      },
     }
   </script>
   <!-- Docsify v4 -->
@@ -112,8 +132,8 @@
   <!-- 选项卡/标签卡 docsify-tabs (latest v1.x.x) -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
   <!-- 左侧边栏折叠 -->
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar-folder.min.css" />
-  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  <!-- <link rel="stylesseet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar-folder.min.css" />
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script> -->
   <!-- 右侧栏 -->
   <link rel="stylesheet" href="_css/right-toc.css">
   <script src="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/docsify-plugin-toc.min.js"></script>
@@ -149,5 +169,10 @@
   <script src="https://cdn.jsdelivr.net/npm/docsify-updated/src/time-updater.min.js"></script>
   <!-- 分页 --> <!-- slide:break-# -->
   <script src="//unpkg.com/docsify-slides/dist/docsify-slides.min.js"></script>
+<!-- 文档加密 -->
+<script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/build/sha256.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docsify-auth@1.2.0/dist/docsify-auth.min.js"></script>
+  <!-- 文档编号 https://github.com/markbattistella/docsify-auto-headers -->
+  <script src="https://cdn.jsdelivr.net/npm/@markbattistella/docsify-autoheaders@latest"></script>
 </body>
 </html>

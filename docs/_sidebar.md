@@ -1,24 +1,32 @@
-- [引言](#)
-  - [认识分子模拟](aboutMS.md)
+- 基本技能
+  - [安装Linux](getLinux.md)
+  - [安装GROMACS](getGromacs.md)
+  - [VMD的使用](useVMD.md)
+  - pymol的使用
+  - AmberTools的使用
+  - [gmx_MMPBSA的使用](mmpbsa.md)
+  - [Cellulose-Builder的安装和使用](celluloseBuilder.md)
+  - [Guassian的安装和使用](gauss.md)
+  - [Materials Studio安装和介绍](materialsStudio.md)
+  - [Discovery Studio安装和介绍](discoveryStudio.md)
+  - [安装LAMMPS](lammps.md)
+  - [安装CHARMM](charmm.md)
+
+- 实践操作
+  - [水中的溶菌酶](lyzInwater.md)
+  - 水中的甲烷
+  - 纤维素
+  - 真空中的石墨烯
+
+- 基础知识
+  - [GNU/Linux](GNU_Linux.md)
+  - [分子模拟概述](aboutMS.md)
   - [量子化学](quantumChemistry.md)
   - [分子力学](molecularMechanics.md)
   - [分子动力学](molecularDynamics.md)
   - [分子建模](model.md)
   - [分子对接](dock.md)
-- [软件&工具](#)
-  - [GROMACS](gromacs.md)
-  - [Amber](amber.md)
-  - [LAMMPS](lammps.md)
-  - [CHARMM](charmm.md)
-  - [Gaussian](gauss.md)
-  - [Materials Studio](materialsStudio.md)
-  - [Discovery Studio](discoveryStudio.md)
-  - [Cellulose-Builder](Cellulose-Builder.md)
-  - [gmx_MMPBSA](mmpbsa.md)
-  - [化学数据库](chemDatabase.md)
-  - [软件汇总](#)
-- [模拟示例](#)
-  - [水中的溶菌酶](lysozymeWater.md)
-- [基础知识](#)
-  - [GNU/Linux](GNU_Linux.md)
   - [统计物理学](statisticalPhysics.md)
+  - [GROMACS概述](gromacs.md)
+  - [Amber概述](amber.md)
+  - [化学数据库介绍](chemDatabase.md)

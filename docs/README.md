@@ -1,4 +1,20 @@
-# Molecular Simulation
->试图介绍关于分子模拟的一切
-# Use Network Resources More
->搜索能解决90%的问题
+# Quick start
+>试图介绍关于分子模拟的知识
+
+这里有三个板块内容：**基本技能 实践操作 基础知识**
+
+**基本技能** 是一个个小技能，是一些基本功
+
+**实践操作** 是一个完整的模拟流程，可能用到一些“基本技能”作为先决条件
+
+**基础知识** 是理论知识，当不理解一些术语、概念时，这里可能会给出答案
+# Use Network More
+>善用网络，搜索能解决90%的问题
+
+一些没有介绍到的名词、操作，学会利用网络获取答案
+
+最近一些免费、火爆的 AI 搜索网站：
+1. 百度出品：[文心一言](https://yiyan.baidu.com/)
+2. [秘塔AI](https://metaso.cn/)
+3. 字节跳动：[豆包](https://www.doubao.com/chat/)
+4. [Kimi智能助手](https://kimi.moonshot.cn/)

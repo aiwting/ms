@@ -11,4 +11,4 @@
   - [Home](README.md)
   - [Quick start](README.md)
 - Resource
-  - [Configuration](configuration.md)
+  - [BaiduNetdisk](configuration.md)
