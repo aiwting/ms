@@ -1,4 +1,5 @@
 @autoHeader:0
+>目标：介绍一个生成纤维素晶体的脚本工具
 # 简介
 - Cellulose-Builder 是一个 bash 脚本，可以在任何类 Unix 平台上运行，由坎皮纳斯州立大学(UNICAMP)斯卡夫化学研究所开发。该程序可以构建不同尺寸和几何形状的纤维素晶体结构，为指定纤维素结构的所有原子生成笛卡尔坐标，适合用作分子动力学模拟和其他计算中的起始结构。
 - 从他们发布的网站下载需要魔法。(https://code.google.com/archive/p/cellulose-builder/downloads)  

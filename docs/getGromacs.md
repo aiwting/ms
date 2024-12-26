@@ -1,12 +1,12 @@
 @autoHeader:0
-# 引言
 >目的：安装开源、高速、灵活的MD模拟软件GROMACS
-
-版本和平台：
+# 引言
+GROMACS的版本和平台：
 - GROMACS更新很快，有多个版本：
   - 支持CUDA加速的版本：需要nVidia独立显卡
   - 支持并行计算的版：一般用于含多个处理器的计算服务器
   - 单/双精度版本：一般计算单精度版本就够了
+- GROMACS是开源的，理论上可以编译到任何你想要的平台使用：Windows、Linux、Mac 但最常用的是Linux平台。
 
 推荐：
 - 只用来学习和熟悉GROMACS基本操作，或者没有显卡，同时是Windows系统，推荐完成“1”即可。
@@ -73,7 +73,8 @@ conda install acpype
 `conda env create --file env.yml`  
 3. 设置默认激活ms环境：`conda config --set default_env ms`  
 至此你可以在终端运行`gmx`命令查看GROMACS是否成功安装，输出如下：
-```terminal
+```term
+$ gmx
                    :-) GROMACS - gmx, 2024.3-conda_forge (-:
 
 Executable:   /home/username/miniconda3/envs/ms/bin.AVX2_256/gmx
