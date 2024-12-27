@@ -20,6 +20,8 @@
 
 - 基础知识
   - [GNU/Linux](GNU_Linux.md)
+  - [GROMACS概述](gromacs.md)
+  - [Amber概述](amber.md)
   - [分子模拟概述](aboutMS.md)
   - [量子化学](quantumChemistry.md)
   - [分子力学](molecularMechanics.md)
@@ -27,6 +29,4 @@
   - [分子建模](model.md)
   - [分子对接](dock.md)
   - [统计物理学](statisticalPhysics.md)
-  - [GROMACS概述](gromacs.md)
-  - [Amber概述](amber.md)
   - [化学数据库介绍](chemDatabase.md)

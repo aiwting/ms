@@ -45,7 +45,7 @@ ensemble，统计系综：在一定的宏观条件下，大量性质和结构完
 - [分子动力学模拟常用系综 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/201411610)
 - 微正则系综(microcanonical ensemble, NVE)  
 - 正则系综(canonical ensemble, NVT)  
-- 巨正则系综(grand canonical ensemble, μ V T ) \mu VT)μVT)  
+- 巨正则系综(grand canonical ensemble, μ V T )
 - 等温等压系综(isothermal-isobaric ensemble, NPT)  
 - 等压等焓系综(contant-pressure,constant-enthalpy, NPH)
 - [【统计力学】平衡态理论——统计系综 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/201350705)

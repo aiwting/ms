@@ -18,3 +18,5 @@
 2. [秘塔AI](https://metaso.cn/)
 3. 字节跳动：[豆包](https://www.doubao.com/chat/)
 4. [Kimi智能助手](https://kimi.moonshot.cn/)
+
+# Be Skeptical
