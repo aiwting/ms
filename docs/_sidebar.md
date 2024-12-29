@@ -1,9 +1,10 @@
 - 基本技能
   - [安装Linux](getLinux.md)
-  - [安装GROMACS](getGromacs.md)
+  - [安装GROMACS](getGROMACS.md)
+  - [安装VScode](vscode.md)
   - [VMD的使用](useVMD.md)
-  - pymol的使用
-  - AmberTools的使用
+  - [pymol的使用](usepymol.md)
+  - [AmberTools的使用](ambertools.md)
   - [gmx_MMPBSA的使用](mmpbsa.md)
   - [Cellulose-Builder的安装和使用](celluloseBuilder.md)
   - [Guassian的安装和使用](gauss.md)
