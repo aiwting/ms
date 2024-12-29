@@ -200,7 +200,7 @@ SOL              4471
 
 - 如果你注意pdb2gmx命令的输出，可以看到溶菌酶的净电荷为+8e ："Total charge 8.000 e"，因此需要添加离子中和。
 - genion工具需要读取扩展名为.tpr的文件，因此首先用grompp工具先生成tpr文件
-- 要使用grompp生成一个.tpr文件，还需要一个扩展名为.mdp的文件，可以在此处下载示例[ions.mdp](https://aiwting.github.io/ms/ions.mdp)文件
+- 要使用grompp生成一个.tpr文件，还需要一个扩展名为.mdp的文件，可以在此处下载示例 [ions.mdp](https://aiwting.github.io/ms/files/1/ions.mdp) 文件
 - grompp将动力学参数、结构信息、拓扑参数三部分信息整理成二进制的tpr文件。
 ```term
 $ gmx grompp -f ions.mdp -c 1aki_solvate.gro -p 1aki.top -o ions.tpr
@@ -317,18 +317,71 @@ CL               8
 >GROMACS工具：grompp和mdrun
 
 - 在开始动力学之前，必须确保系统没有空间冲突或不适当的几何形状（尤其是对于自行绘制的分子结构，你没有办法精确的控制没个键长、键角的数值），通过能量最小化（EM）的过程来使得分子结构合理化。
-- 但凡设计到使用grompp生成tpr文件，都需要mdp动力学参数文件，可以使用这里的示例[em.mdp]()文件。
+- 但凡设计到使用grompp生成tpr文件，都需要mdp动力学参数文件，可以使用这里的示例 [em.mdp](https://aiwting.github.io/ms/files/1/em.mdp) 文件。
 ```term
 $ gmx grompp -f em.mdp -c 1aki_solvate_ions.gro -p 1aki.top -o em.tpr
+                :-) GROMACS - gmx grompp, 2024.3-conda_forge (-:
+Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
+Data prefix:  /home/zz/miniconda3/envs/md
+Working dir:  /mnt/e/share/teach
+Command line:
+  gmx grompp -f em.mdp -c 1aki_solvate_ions.gro -p 1aki.top -o em.tpr
 
+NOTE 1 [file em.mdp]:
+  With Verlet lists the optimal nstlist is >= 10, with GPUs >= 20. Note
+  that with the Verlet scheme, nstlist has no effect on the accuracy of
+  your simulation.
+......
+
+This run will generate roughly 1 Mb of data
+
+There was 1 NOTE
+
+GROMACS reminds you: "Youth is wasted on the young" (The Smashing Pumpkins)
 ```
 - 然后执行能量最小化计算
   - `-deffnm em`是简写方法，意思是让mdrun工具以em为名的tpr文件为输入，并使得使出的各种格式的文件以em名字命名。
   - `-v`表示在命令行中显示计算过程
 ```term
 $ gmx mdrun -deffnm em -v
+                :-) GROMACS - gmx mdrun, 2024.3-conda_forge (-:
+
+Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
+Data prefix:  /home/zz/miniconda3/envs/md
+Working dir:  /mnt/e/share/teach
+Command line:
+  gmx mdrun -deffnm em -v
+
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+Reading file em.tpr, VERSION 2024.3-conda_forge (single precision)
+
+1 GPU selected for this run.
+Mapping of GPU IDs to the 1 GPU task in the 1 rank on this node:
+  PP:0
+PP tasks will do (non-perturbed) short-ranged interactions on the GPU
+PP task will update and constrain coordinates on the CPU
+Using 1 MPI thread
+Using 12 OpenMP threads 
 
 
+Steepest Descents:
+   Tolerance (Fmax)   =  1.00000e+03
+   Number of steps    =        50000
+Step=    0, Dmax= 1.0e-02 nm, Epot= -9.63828e+04 Fmax= 1.83369e+05, atom= 252
+Step=    1, Dmax= 1.0e-02 nm, Epot= -1.13756e+05 Fmax= 6.57749e+04, atom= 1367
+Step=    2, Dmax= 1.2e-02 nm, Epot= -1.32426e+05 Fmax= 3.07926e+04, atom= 1367
+......
+
+writing lowest energy coordinates.
+Steepest Descents converged to Fmax < 1000 in 336 steps
+Potential Energy  = -2.2477358e+05
+Maximum force     =  9.9712384e+02 on atom 736
+Norm of force     =  3.6471184e+01
+
+GROMACS reminds you: "First off, I'd suggest printing out a copy of the GNU coding standards, and NOT read it. Burn them, it's a great symbolic gesture." (Linus Torvalds)
 ```
 - 计算完成后将得到四个文件
   1. em.log：日志文件
@@ -336,14 +389,194 @@ $ gmx mdrun -deffnm em -v
   3. em.trr：二进制轨迹文件
   4. em.gro：能量最小化结构
 - 如何确定EM是否成功？
+  - 势能：Epot 应该是负的，对于水中的简单蛋白质应该在 $10^5 - 10^6$ 的数量级上
+  - 最大力：Fmax 一般不大于 $1000 kJ·mol^{-1}·nm^{-1}$
+- 由于本次、模拟个体系很简单，而且蛋白质来源于PDB数据库，本身是一个较合理的结构，在很快的几百步计算下就完成了优化。
+- 简单的看一下能量变化，em.edr文件包含GROMACS在EM期间收集的所有能量项，可以使用GROMACS energy 模块分析任何.edr文件：
+  - 过程中需要键入`10 0`，10表示选择Potential，0表示终止输入。将输出Epot的平均值，以及一个名为“potential.xvg”的文件。
+```term
+$ gmx energy -f em.edr -o potential.xvg
+                :-) GROMACS - gmx energy, 2024.3-conda_forge (-:
+
+Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
+Data prefix:  /home/zz/miniconda3/envs/md
+Working dir:  /mnt/e/share/teach
+Command line:
+  gmx energy -f em.edr -o potential.xvg
+
+Opened em.edr as single precision energy file
+
+Select the terms you want from the following list by
+selecting either (part of) the name or the number or a combination.
+End your selection with an empty line or a zero.
+-------------------------------------------------------------------
+  1  Bond             2  Angle            3  Proper-Dih.      4  Per.-Imp.-Dih.
+  5  LJ-14            6  Coulomb-14       7  LJ-(SR)          8  Coulomb-(SR)
+  9  Coul.-recip.    10  Potential       11  Pressure        12  Vir-XX
+ 13  Vir-XY          14  Vir-XZ          15  Vir-YX          16  Vir-YY
+ 17  Vir-YZ          18  Vir-ZX          19  Vir-ZY          20  Vir-ZZ
+ 21  Pres-XX         22  Pres-XY         23  Pres-XZ         24  Pres-YX
+ 25  Pres-YY         26  Pres-YZ         27  Pres-ZX         28  Pres-ZY
+ 29  Pres-ZZ         30  #Surf*SurfTen   31  T-rest
+
+$ 10 0
+Last energy frame read 265 time  335.000
+
+Statistics over 336 steps [ 0.0000 through 335.0000 ps ], 1 data sets
+All statistics are over 266 points (frames)
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+Potential                   -213378       5900    15542.1   -39018.4  (kJ/mol)
+
+GROMACS reminds you: "This Puke Stinks Like Beer" (LIVE)
+```
+- 使用绘图工具可以绘制能量变化曲线，例如使用xmgrace程序，命令行输入`xmgrace potential.xvg`，结果图应该看起来像如下图：展示了Epot的良好稳定收敛。
+<div><img src="_media/2024-12-29-18-04-49.png" height="400px"></div>
 
 # NVT平衡
+- 平衡通常分两个阶段进行：
+  - 第一阶段在NVT系综下进行。nvt平衡目的是为了稳定系统的温度
+  - 第二阶段在NPT系综下进行。npt平衡目的是为了稳定系统的压力
+- 这里对重原子施加位置限制，grompp命令相比于前面多了一个`-r`选项，表示为模拟的位置限制提供初始的参考结构。
+- 位置约束的意义在于：允许平衡蛋白质周围的溶剂，而不会对蛋白质结构施加变化。
+- 注意这里的动力学参数文件第一行`define = -DPOSRES`，开启了位置限制，用到了前面pdb2gmx生成的位置限制文件。在这里可以找到 [nvt.mdp](https://aiwting.github.io/ms/files/1/nvt.mdp) 文件。
+- 进行时长100ps的平衡
+```term
+$ gmx grompp -f nvt.mdp -c em.gro -r em.gro -p 1aki.top -o nvt.tpr
+                :-) GROMACS - gmx grompp, 2024.3-conda_forge (-:
+Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
+Data prefix:  /home/zz/miniconda3/envs/md
+Working dir:  /mnt/e/share/teach
+Command line:
+  gmx grompp -f nvt.mdp -c em.gro -r em.gro -p 1aki.top -o nvt.tpr
+......
 
+This run will generate roughly 37 Mb of data
+GROMACS reminds you: "Be less curious about people and more curious about ideas." (Marie Curie)
+// 然后运行mdrun
+$ gmx mdrun -deffnm nvt -v
+                :-) GROMACS - gmx mdrun, 2024.3-conda_forge (-:
+
+Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
+Data prefix:  /home/zz/miniconda3/envs/md
+Working dir:  /mnt/e/share/teach
+Command line:
+  gmx mdrun -deffnm nvt -v
+......
+starting mdrun 'LYSOZYME in water'
+50000 steps,    100.0 ps.
+step 14200: timed with pme grid 48 48 48, coulomb cutoff 1.000: 65.5 M-cycles
+step 14400: timed with pme grid 42 42 42, coulomb cutoff 1.073: 61.0 M-cycles
+step 14600: timed with pme grid 36 36 36, coulomb cutoff 1.252: 187.5 M-cycles
+step 14800: timed with pme grid 40 40 40, coulomb cutoff 1.127: 102.2 M-cycles
+step 15000: timed with pme grid 42 42 42, coulomb cutoff 1.073: 95.6 M-cycles
+step 15200: timed with pme grid 44 44 44, coulomb cutoff 1.025: 81.5 M-cycles
+step 15400: timed with pme grid 48 48 48, coulomb cutoff 1.000: 76.6 M-cycles
+              optimal pme grid 42 42 42, coulomb cutoff 1.073
+step 26700, remaining wall clock time:    10 s
+// 等待计算完成
+Writing final coordinates.
+step 50000, remaining wall clock time:     0 s
+               Core t (s)   Wall t (s)        (%)
+       Time:      121.848       20.310      599.9
+                 (ns/day)    (hour/ns)
+Performance:      425.410        0.056
+
+GROMACS reminds you: "Alas, You're Welcome" (Prof. Dumbledore in Potter Puppet Pals)
+```
+- 再次使用energy来分析温度的变化：在提示符处键入“16 0”以选择系统的温度并退出。
+```term
+$ gmx energy -f nvt.edr -o temperature.xvg
+                :-) GROMACS - gmx energy, 2024.3-conda_forge (-:
+
+Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
+Data prefix:  /home/zz/miniconda3/envs/md
+Working dir:  /mnt/e/share/teach
+Command line:
+  gmx energy -f nvt.edr -o temperature.xvg
+
+Opened nvt.edr as single precision energy file
+
+Select the terms you want from the following list by
+selecting either (part of) the name or the number or a combination.
+End your selection with an empty line or a zero.
+-------------------------------------------------------------------
+  1  Bond             2  Angle            3  Proper-Dih.      4  Per.-Imp.-Dih.
+  5  LJ-14            6  Coulomb-14       7  LJ-(SR)          8  Disper.-corr.
+  9  Coulomb-(SR)    10  Coul.-recip.    11  Position-Rest.  12  Potential
+ 13  Kinetic-En.     14  Total-Energy    15  Conserved-En.   16  Temperature
+ 17  Pres.-DC        18  Pressure        19  Constr.-rmsd    20  Vir-XX
+ 21  Vir-XY          22  Vir-XZ          23  Vir-YX          24  Vir-YY
+ 25  Vir-YZ          26  Vir-ZX          27  Vir-ZY          28  Vir-ZZ
+ 29  Pres-XX         30  Pres-XY         31  Pres-XZ         32  Pres-YX
+ 33  Pres-YY         34  Pres-YZ         35  Pres-ZX         36  Pres-ZY
+ 37  Pres-ZZ                             38  #Surf*SurfTen
+ 39  T-Protein                           40  T-Water_and_ions
+ 41  Lamb-Protein                        42  Lamb-Water_and_ions
+$ 16 0
+Last energy frame read 100 time  100.000
+
+Statistics over 50001 steps [ 0.0000 through 100.0000 ps ], 1 data sets
+All statistics are over 501 points
+
+Energy                      Average   Err.Est.       RMSD  Tot-Drift
+-------------------------------------------------------------------------------
+Temperature                 300.134        0.1    3.27203   0.620947  (K)
+
+GROMACS reminds you: "You are wrong!" (NOFX)
+```
+- 输入`xmgrace temperature.xvg `查看温度变化，生成的图应如下：从图中可以看出系统的温度迅速达到目标值（300 K）附近。
+<div><img src="_media/2024-12-29-23-43-40.png" height="400px"></div>
 
 # NPT平衡
+- 过程几乎与nvt平衡类似，进行100ps，开启位置限制。
+- 这里可以找到 [npt.mdp](https://aiwting.github.io/ms/files/1/npt.mdp) 文件，注意mdp文件中的一些变化
+  - `continuation = yes`表示从NVT平衡阶段继续模拟
+  - `gen_vel = no`表示从轨迹中读取速度
+- 这里可能会出现一个警告warning，在最新版本的GROMACS中会出现，不用管它，这是官方在推荐使用一种新的恒压方法。在命令最后添加`-maxwarn 1`重新运行。
+```term
+$ gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p 1aki.top -o npt.tpr
+WARNING 1 [file npt.mdp]:
+  The Berendsen barostat does not generate any strictly correct ensemble,
+  and should not be used for new production simulations (in our opinion).
+  We recommend using the C-rescale barostat instead.
+......
+There was 1 WARNING
+-------------------------------------------------------
+Program:     gmx grompp, version 2024.3-conda_forge
+Source file: src/gromacs/gmxpreprocess/grompp.cpp (line 2751)
 
+Fatal error:
+Too many warnings (1).
+If you are sure all warnings are harmless, use the -maxwarn option.
+
+For more information and tips for troubleshooting, please check the GROMACS
+website at https://manual.gromacs.org/current/user-guide/run-time-errors.html
+-------------------------------------------------------
+// warning 忽略它重新运行
+$ gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p 1aki.top -o npt.tpr -maxwarn 1
+......
+// 然后运行mdrun
+$ gmx mdrun -deffnm npt
+......
+```
+- 再次使用energy来分析压强、密度的变化：
+```term
+$ gmx energy -f npt.edr -o pressure.xvg
+......
+$ 18 0
+......
+$ gmx energy -f npt.edr -o density.xvg
+......
+$ 24 0
+......
+``` 
+- 再次执行绘图命令`xmgrace pressure.xvg`，`xmgrace density.xvg`，压力和密度均很快达到平衡，表明系统现在在压力和密度方面平衡良好。
+- 压力值在平衡阶段的过程中波动很大，但不用担心，压力是一个在MD模拟过程中波动很大的量。
+<div><img src="_media/2024-12-29-23-44-34.png" height="400px"><img src="_media/2024-12-29-23-45-41.png" height="400px"></div>
 
 # MD模拟
-
+- 动力学模拟的参数文件可以在这里找到 [md.mdp](https://aiwting.github.io/ms/1/md.mdp) 
 
 # 结果分析
