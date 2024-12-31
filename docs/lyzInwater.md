@@ -314,7 +314,7 @@ CL               8
 ```
 
 # 能量最小化
->GROMACS工具：grompp和mdrun
+>GROMACS工具：grompp, mdrun, energy
 
 - 在开始动力学之前，必须确保系统没有空间冲突或不适当的几何形状（尤其是对于自行绘制的分子结构，你没有办法精确的控制没个键长、键角的数值），通过能量最小化（EM）的过程来使得分子结构合理化。
 - 但凡设计到使用grompp生成tpr文件，都需要mdp动力学参数文件，可以使用这里的示例 [em.mdp](https://aiwting.github.io/ms/files/1/em.mdp) 文件。
@@ -435,10 +435,12 @@ GROMACS reminds you: "This Puke Stinks Like Beer" (LIVE)
 <div><img src="_media/2024-12-29-18-04-49.png" height="400px"></div>
 
 # NVT平衡
+>GROMACS工具：grompp, mdrun, energy
+
 - 平衡通常分两个阶段进行：
   - 第一阶段在NVT系综下进行。nvt平衡目的是为了稳定系统的温度
   - 第二阶段在NPT系综下进行。npt平衡目的是为了稳定系统的压力
-- 这里对重原子施加位置限制，grompp命令相比于前面多了一个`-r`选项，表示为模拟的位置限制提供初始的参考结构。
+- 这里对重原子施加位置限制，grompp命令相比于前面多了一个`-r`参数，表示为模拟的位置限制提供初始的参考结构。
 - 位置约束的意义在于：允许平衡蛋白质周围的溶剂，而不会对蛋白质结构施加变化。
 - 注意这里的动力学参数文件第一行`define = -DPOSRES`，开启了位置限制，用到了前面pdb2gmx生成的位置限制文件。在这里可以找到 [nvt.mdp](https://aiwting.github.io/ms/files/1/nvt.mdp) 文件。
 - 进行时长100ps的平衡
@@ -530,10 +532,13 @@ GROMACS reminds you: "You are wrong!" (NOFX)
 <div><img src="_media/2024-12-29-23-43-40.png" height="400px"></div>
 
 # NPT平衡
+>GROMACS工具：grompp, mdrun, energy
+
 - 过程几乎与nvt平衡类似，进行100ps，开启位置限制。
 - 这里可以找到 [npt.mdp](https://aiwting.github.io/ms/files/1/npt.mdp) 文件，注意mdp文件中的一些变化
   - `continuation = yes`表示从NVT平衡阶段继续模拟
   - `gen_vel = no`表示从轨迹中读取速度
+- `-t`指定上一步生成的检查点文件.cpt，存储了上一步模拟过程中的完整状态信息。配合上述mdp文件的参数使用。
 - 这里可能会出现一个警告warning，在最新版本的GROMACS中会出现，不用管它，这是官方在推荐使用一种新的恒压方法。在命令最后添加`-maxwarn 1`重新运行。
 ```term
 $ gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p 1aki.top -o npt.tpr
@@ -577,6 +582,94 @@ $ 24 0
 <div><img src="_media/2024-12-29-23-44-34.png" height="400px"><img src="_media/2024-12-29-23-45-41.png" height="400px"></div>
 
 # MD模拟
-- 动力学模拟的参数文件可以在这里找到 [md.mdp](https://aiwting.github.io/ms/1/md.mdp) 
+- 在完成两个平衡阶段后，系统现在在所需的温度和压力下充分平衡。
+- 操作流程几乎类似npt平衡，区别在于关闭位置限制，因此不需要`-r`参数；继续从上一个模拟过程开始，因此`-t`指定上一个过程生成的cpt文件。
+- 动力学模拟的参数文件可以在这里找到 [md.mdp](https://aiwting.github.io/ms/files/1/md.mdp) 
+- 同样使用`-maxwarn 1`忽略压力平衡器的警告
+```term
+$ gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p 1aki.top -o md0.tpr -maxwarn 1
+                :-) GROMACS - gmx grompp, 2024.3-conda_forge (-:
 
-# 结果分析
+Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
+Data prefix:  /home/zz/miniconda3/envs/md
+Working dir:  /mnt/e/share/teach
+Command line:
+  gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p 1aki.top -o md0.tpr -maxwarn 1
+......
+WARNING 1 [file md.mdp]:
+  13397 atoms are not part of any center of mass motion removal group.
+  This may lead to artifacts.
+  In most cases one should use one group for the whole system.
+......
+There was 1 WARNING
+
+GROMACS reminds you: "Is That a Real Poncho ?" (F. Zappa)
+// 然后执行MD模拟，花费时间因机器性能而异（几分钟~1个多小时）
+$ gmx mdrun -deffnm md0 -v
+                :-) GROMACS - gmx mdrun, 2024.3-conda_forge (-:
+......
+step 499900, remaining wall clock time:     0 s
+Writing final coordinates.
+step 500000, remaining wall clock time:     0 s
+               Core t (s)   Wall t (s)        (%)
+       Time:      830.063      138.346      600.0
+                 (ns/day)    (hour/ns)
+Performance:      624.522        0.038
+
+GROMACS reminds you: "Developer accused of unreadable code refuses to comment" (Molly Struve)
+```
+**恭喜完成了一个完整的GROMACS模拟案例，接下来是简单的分析**
+# 后处理与分析
+## 观察轨迹
+- 用VMD查看模拟轨迹，可以发现溶菌酶分子在水中的运动情况。  
+<div><img src="_media/lyzwaterMD.gif" height=400px></div>
+
+## 轨迹文件处理
+>GROMACS工具：trjconv
+
+- 如果你的目标分子跑出盒子处于盒子边界处（这里不会因为mdp文件中设置消除了蛋白质的质心运动），需要`trjconv`来调整轨迹文件位置。
+```term
+// 这是示例，可以不执行
+$ gmx trjconv -s md0.tpr -f md0.xtc -o md0_noPBC.xtc -pbc mol -center
+// 选择1（“Protein”）作为要居中的组，选择0（“System”）作为输出。
+```
+- 此外`trjconv`还可以转换轨迹文件格式，调整轨迹步数间隔，输出某一段的轨迹文件、输出某些步的结构文件等等。
+
+## 计算根均方偏差RMSD
+>GROMACS工具：rms
+
+- 蛋白质的RMSD反映了模拟的收敛性和蛋白的稳定性.
+- `rms` 计算模拟过程中的结构与初始结构的RMSD，程序会对结构进行最小二乘拟合并给出RMSD随时间的变化，将得到一个xvg文件，包含了RMSD随时间的变化。
+- `-tu`表示设置输出时间单位为 ns
+```term
+// 以经过两步平衡后的结构为参考结构
+$ gmx rms -s md0.tpr -f md0.xtc -o rmsd.xvg -tu ns
+// 选择3（“α碳”），两次选择相同的组
+$ 3 3
+// 再与晶体结构作为参考结构做一下对比
+$ gmx rms -s em.tpr -f md0.xtc -o rmsd_crystal.xvg -tu ns
+$ 3 3
+// 然后用xmgrace绘图
+$ xmgrace rmsd.xvg rmsd_crystal.xvg
+```
+- 结果看起来像这样：
+
+<div><img src="_media/2024-12-31-18-39-40.png" height=400px></div>
+- 可以看到RMSD很快稳定到一个较小的值，并在后续保持。这说明溶菌酶分子在水中结构非常稳定波动很小，且该模拟很容易达到平衡，与该晶体结构略有细微差异。
+
+## 蛋白质回旋半径
+>GROMACS工具：gyrate
+
+- 蛋白质的回转半径是其致密性的衡量标准：回旋半径取决于某(些)原子质量与分子重心的关系, 因此可用于表征蛋白质结构的密实度。
+- 如果一个蛋白质是稳定折叠态，它将可能保持相对稳定的Rg值。如果一个蛋白质展开，它的Rg会随着时间的推移而改变。
+```term
+$ gmx gyrate -s md0.tpr -f md0.xtc -o gyrate.xvg
+// 选择第1组（“Protein”）进行分析
+$ 1
+// 绘图
+$ xmgrace gyrate.xvg
+```
+- 从平稳的Rg值看出，溶菌酶在300 K 下 1 ns 的过程中保持非常稳定的折叠状态：
+<div><img src="_media/2024-12-31-21-26-06.png" height=400px></div>
+
+**至此，我们完成了水中溶菌酶的全部模拟！应该熟悉了GROMACS的基本模拟流程，一些常用的GROMACS工具（模块）及其命令。**
