@@ -1,6 +1,9 @@
 @autoHeader:0
->目标：使用GROMACS执行溶菌酶在水中的MD模拟
+
+> 目标：使用GROMACS执行溶菌酶在水中的MD模拟
+
 # 引言
+
 - 首先安装了GROMACS，这里默认你使用的是Windows版或者是WSL中的GROMACS
 - 该教程来自弗吉尼亚理工大学生物化学系的分子动力学教程：www.mdtutorials.com
 - 该模拟流程完整清晰，符合一个GROMACS模拟的标准流程，足够简单不需要复杂的准备工作，是了解GROMACS基本操作的**入门案例**
@@ -8,12 +11,12 @@
 - GROMACS的所有工具都是以命令形式调用，所以需要在命令行界面操作。命令格式形如：`gmx <module> <parameters>`
   - module 是各种GROMACS工具，以完成生成拓扑参数、构建盒子、添加溶剂、添加离子、执行模拟计算等功能
   - parameters 规定了一条GROMACS命令具体的输入与输出文件，一级一些可选项
-  - 例如，想要查询一个GROMACS工具可以接受的参数，使用`gmx <module> -h`，输出依次是：程序在电脑中的路径、GROMACS的安装路径、当前的工作目录、输入的命令、该工具的语法、描述、可选项、其它选项、最后是GROMACS程序的提示语（提示语没用，但看到它表示此次命令执行成功）。
+  - 例如，想要查询一个GROMACS工具可以接受的参数，使用 `gmx <module> -h`，输出依次是：程序在电脑中的路径、GROMACS的安装路径、当前的工作目录、输入的命令、该工具的语法、描述、可选项、其它选项、最后是GROMACS程序的提示语（提示语没用，但看到它表示此次命令执行成功）。
+
 ```term
 // GROMACS命令示例
 $ gmx pdb2gmx -h
                :-) GROMACS - gmx pdb2gmx, 2024.3-conda_forge (-:
-
 Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
 Data prefix:  /home/zz/miniconda3/envs/md
 Working dir:  /mnt/e/share/ms
@@ -21,7 +24,6 @@ Command line:
   gmx pdb2gmx -h
 
 SYNOPSIS
-
 gmx pdb2gmx [-f [<.gro/.g96/...>]] [-o [<.gro/.g96/...>]] [-p [<.top>]]
             [-i [<.itp>]] [-n [<.ndx>]] [-q [<.gro/.g96/...>]]
             [-chainsep <enum>] [-merge <enum>] [-ff <string>] [-water <enum>]
@@ -41,25 +43,24 @@ GROMACS reminds you: "If we knew what it was we were doing, it would not be call
 ```
 
 # 准备文件
+
 - 获得蛋白质结构文件，去[RCSB](https://www.rcsb.org/)网站下载溶菌酶的pdb文件，搜索PDB ID 1AKI >点击右侧“Download Files” >PDB Format，将得到"1aki.pdb"
 - 现在进入VScode，复制一份"1aki.pdb"文件并打开，可以看到包含了结晶水"HOH"，删除所有"HOH"所在行，命名为"1aki-h2o.pdb"
-- 注意检查蛋白质pdb文件结构，一个标准的蛋白质pdb文件包含了：
-```
-
-```
+- 注意检查蛋白质pdb文件结构，一个标准的蛋白质pdb文件包含了：文件标题 HEADER, 实验数据和元数据 REMARK, 残基序列 SEQRES, 二级和三级结构信息 HELIX SHEET, 晶体学信息 CRYST1, 二硫键 SSBOND, 原子坐标 ATOM, 非标准残基或配体的原子 HETATM, 原子之间的连接关系 CONECT, TER 用于标识链的结束, MODEL 用于多模型结构的描述等等.
 
 # 生成拓扑结构
->GROMACS工具：pdb2gmx
+
+> GROMACS工具：pdb2gmx
 
 - pdb2gmx命令会生成三个文件：
   1. 分子的拓扑结构.top
   2. 位置限制文件.itp
   3. GROMACS格式的结构文件.gro
 - 需要输入数字来选择力场和水模型，相关信息将写入top文件中。力场选择"AMBER99SB"，水模型无特殊需求选择简单点电荷水即可"TIP3P"
+
 ```term
 $ gmx pdb2gmx -f 1aki-h2o.pdb -p 1aki.top -i 1aki.itp -o 1aki.gro
                :-) GROMACS - gmx pdb2gmx, 2024.3-conda_forge (-:
-
 Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
 Data prefix:  /home/zz/miniconda3/envs/md
 Working dir:  /mnt/e/share/teach
@@ -116,11 +117,15 @@ The Amber99sb force field and the tip3p water model are used.
                 --------- ETON ESAELP ------------
 GROMACS reminds you: "The Carpenter Goes Bang Bang" (The Breeders)
 ```
-- 现在使用VMD观察.top文件，在命令窗口输入`pbc box`回车，会发现蛋白质没有完全在盒子内，接下来进行调整
+
+- 现在使用VMD观察.top文件，在命令窗口输入 `pbc box`回车，会发现蛋白质没有完全在盒子内，接下来进行调整.
 
 # 调整模拟盒子
->GROMACS工具：editconf
+
+> GROMACS工具：editconf
+
 - 使用简单的立方体作为盒子，将蛋白质剧中，距离边界至少0.2nm
+
 ```term
 $ gmx editconf -f 1aki.gro -o 1aki_newbox.gro -bt cubic -c -d 0.2
                :-) GROMACS - gmx editconf, 2024.3-conda_forge (-:
@@ -151,13 +156,16 @@ Back Off! I just backed up 1aki_newbox.gro to ./#1aki_newbox.gro.1#
 
 GROMACS reminds you: "Predictions can be very difficult - especially about the future." (Niels Bohr)
 ```
+
 - 再次使用VMD观察"1aki_newbox.gro"，可以看到盒子蛋白质位于盒子中央
 
 # 添加溶剂（溶剂化蛋白质）
->GROMACS工具：solvate
+
+> GROMACS工具：solvate
 
 - 使用水模型 spc216.gro（这是一个通用的三点水模型）填充盒子，并指定更新top文件（因为引入了新的分子，每次向盒子中添加新分子都需要更新top文件）
 - 注意这里重复使用了"1aki.top"文件名，因此原来的文件将被备份为"#1aki.top.1#"
+
 ```term
 $ gmx solvate -cp 1aki_newbox.gro -cs spc216.gro -o 1aki_solvate.gro -p 1aki.top
                :-) GROMACS - gmx solvate, 2024.3-conda_forge (-:
@@ -186,22 +194,27 @@ Back Off! I just backed up 1aki.top to ./#1aki.top.1#
 GROMACS reminds you: "I wanted to have a real language where programmers could write real programs, and see whether they would find the idea of data abstraction at 
 all useful." (Barbara Liskov)
 ```
+
 - 重新观察一下新的"1aki.top"文件，最下面将多一行"SOL 4471"表示4471个溶剂分子
-```
+
+```1aki.top
 [ molecules ]
 ; Compound        #mols
 Protein_chain_A     1
 SOL              4471
 ```
+
 - 还可以用VMD查看一下新的"1aki_solvate.gro"，可以看到水分子充满了盒子，溶菌酶被包裹在中间。
 
 # 添加离子
->GROMACS工具：grompp和genion
+
+> GROMACS工具：grompp和genion
 
 - 如果你注意pdb2gmx命令的输出，可以看到溶菌酶的净电荷为+8e ："Total charge 8.000 e"，因此需要添加离子中和。
 - genion工具需要读取扩展名为.tpr的文件，因此首先用grompp工具先生成tpr文件
 - 要使用grompp生成一个.tpr文件，还需要一个扩展名为.mdp的文件，可以在此处下载示例 [ions.mdp](https://aiwting.github.io/ms/files/1/ions.mdp) 文件
 - grompp将动力学参数、结构信息、拓扑参数三部分信息整理成二进制的tpr文件。
+
 ```term
 $ gmx grompp -f ions.mdp -c 1aki_solvate.gro -p 1aki.top -o ions.tpr
                 :-) GROMACS - gmx grompp, 2024.3-conda_forge (-:
@@ -213,24 +226,13 @@ Command line:
   gmx grompp -f ions.mdp -c 1aki_solvate.gro -p 1aki.top -o ions.tpr
 
 Setting the LD random seed to 1608515534
-
-Generated 2145 of the 2145 non-bonded parameter combinations
-Generating 1-4 interactions: fudge = 0.5
-
-Generated 2145 of the 2145 1-4 parameter combinations
-
-Excluding 3 bonded neighbours molecule type 'Protein_chain_A'
-
-Excluding 2 bonded neighbours molecule type 'SOL'
-
+......
 NOTE 1 [file 1aki.top, line 18409]:
   System has non-zero total charge: 8.000000
   Total charge should normally be an integer. See
   https://manual.gromacs.org/current/user-guide/floating-point.html
   for discussion on how close it should be to an integer.
-
-
-
+......
 Analysing residue names:
 There are:   129    Protein residues
 There are:  4471      Water residues
@@ -241,19 +243,17 @@ The integrator does not provide a ensemble temperature, there is no system ensem
 NOTE 2 [file ions.mdp]:
   You are using a plain Coulomb cut-off, which might produce artifacts.
   You might want to consider using PME electrostatics.
-
-
-
+......
 This run will generate roughly 1 Mb of data
 
 There were 2 NOTEs
 
 GROMACS reminds you: "The future always gets twisted and turned" (Lisa o Piu)
-
-
 ```
-- 接下来正式添加离子，指定阳离子为钠离子，阴离子为氯离子，使体系保持电中性"-neutral"，并更新top文件。
+
+- 接下来正式添加离子，指定阳离子为钠离子，阴离子为氯离子，使体系保持电中性"-neutral"，并更新top文件.
 - 过程中需要输入数字选择溶剂组"SOL"
+
 ```term
 $ gmx genion -s ions.tpr -o 1aki_solvate_ions.gro -pname NA -nname CL -neutral -p 1aki.top
                 :-) GROMACS - gmx genion, 2024.3-conda_forge (-:
@@ -304,8 +304,10 @@ Replacing solvent molecule 1838 (atom 7474) with CL
 
 GROMACS reminds you: "Torture numbers, and they'll confess to anything." (Greg Easterbrook)
 ```
+
 - 现在检查一下新的top文件，最下面应该多了"CL 8"
-```
+
+```1aki.top
 [ molecules ]
 ; Compound        #mols
 Protein_chain_A     1
@@ -314,10 +316,12 @@ CL               8
 ```
 
 # 能量最小化
->GROMACS工具：grompp, mdrun, energy
+
+> GROMACS工具：grompp, mdrun, energy
 
 - 在开始动力学之前，必须确保系统没有空间冲突或不适当的几何形状（尤其是对于自行绘制的分子结构，你没有办法精确的控制没个键长、键角的数值），通过能量最小化（EM）的过程来使得分子结构合理化。
 - 但凡设计到使用grompp生成tpr文件，都需要mdp动力学参数文件，可以使用这里的示例 [em.mdp](https://aiwting.github.io/ms/files/1/em.mdp) 文件。
+
 ```term
 $ gmx grompp -f em.mdp -c 1aki_solvate_ions.gro -p 1aki.top -o em.tpr
                 :-) GROMACS - gmx grompp, 2024.3-conda_forge (-:
@@ -339,13 +343,14 @@ There was 1 NOTE
 
 GROMACS reminds you: "Youth is wasted on the young" (The Smashing Pumpkins)
 ```
+
 - 然后执行能量最小化计算
   - `-deffnm em`是简写方法，意思是让mdrun工具以em为名的tpr文件为输入，并使得使出的各种格式的文件以em名字命名。
   - `-v`表示在命令行中显示计算过程
+
 ```term
 $ gmx mdrun -deffnm em -v
                 :-) GROMACS - gmx mdrun, 2024.3-conda_forge (-:
-
 Executable:   /home/zz/miniconda3/envs/md/bin.AVX2_256/gmx
 Data prefix:  /home/zz/miniconda3/envs/md
 Working dir:  /mnt/e/share/teach
@@ -383,6 +388,7 @@ Norm of force     =  3.6471184e+01
 
 GROMACS reminds you: "First off, I'd suggest printing out a copy of the GNU coding standards, and NOT read it. Burn them, it's a great symbolic gesture." (Linus Torvalds)
 ```
+
 - 计算完成后将得到四个文件
   1. em.log：日志文件
   2. em.edr：二进制能量文件
@@ -393,7 +399,8 @@ GROMACS reminds you: "First off, I'd suggest printing out a copy of the GNU codi
   - 最大力：Fmax 一般不大于 $1000 kJ·mol^{-1}·nm^{-1}$
 - 由于本次、模拟个体系很简单，而且蛋白质来源于PDB数据库，本身是一个较合理的结构，在很快的几百步计算下就完成了优化。
 - 简单的看一下能量变化，em.edr文件包含GROMACS在EM期间收集的所有能量项，可以使用GROMACS energy 模块分析任何.edr文件：
-  - 过程中需要键入`10 0`，10表示选择Potential，0表示终止输入。将输出Epot的平均值，以及一个名为“potential.xvg”的文件。
+  - 过程中需要键入 `10 0`，10表示选择Potential，0表示终止输入。将输出Epot的平均值，以及一个名为“potential.xvg”的文件。
+
 ```term
 $ gmx energy -f em.edr -o potential.xvg
                 :-) GROMACS - gmx energy, 2024.3-conda_forge (-:
@@ -431,19 +438,23 @@ Potential                   -213378       5900    15542.1   -39018.4  (kJ/mol)
 
 GROMACS reminds you: "This Puke Stinks Like Beer" (LIVE)
 ```
-- 使用绘图工具可以绘制能量变化曲线，例如使用xmgrace程序，命令行输入`xmgrace potential.xvg`，结果图应该看起来像如下图：展示了Epot的良好稳定收敛。
+
+- 使用绘图工具可以绘制能量变化曲线，例如使用xmgrace程序，命令行输入 `xmgrace potential.xvg`，结果图应该看起来像如下图：展示了Epot的良好稳定收敛。
+
 <div><img src="_media/2024-12-29-18-04-49.png" height="400px"></div>
 
 # NVT平衡
->GROMACS工具：grompp, mdrun, energy
+
+> GROMACS工具：grompp, mdrun, energy
 
 - 平衡通常分两个阶段进行：
   - 第一阶段在NVT系综下进行。nvt平衡目的是为了稳定系统的温度
   - 第二阶段在NPT系综下进行。npt平衡目的是为了稳定系统的压力
-- 这里对重原子施加位置限制，grompp命令相比于前面多了一个`-r`参数，表示为模拟的位置限制提供初始的参考结构。
+- 这里对重原子施加位置限制，grompp命令相比于前面多了一个 `-r`参数，表示为模拟的位置限制提供初始的参考结构。
 - 位置约束的意义在于：允许平衡蛋白质周围的溶剂，而不会对蛋白质结构施加变化。
-- 注意这里的动力学参数文件第一行`define = -DPOSRES`，开启了位置限制，用到了前面pdb2gmx生成的位置限制文件。在这里可以找到 [nvt.mdp](https://aiwting.github.io/ms/files/1/nvt.mdp) 文件。
+- 注意这里的动力学参数文件第一行 `define = -DPOSRES`，开启了位置限制，用到了前面pdb2gmx生成的位置限制文件。在这里可以找到 [nvt.mdp](https://aiwting.github.io/ms/files/1/nvt.mdp) 文件。
 - 进行时长100ps的平衡
+
 ```term
 $ gmx grompp -f nvt.mdp -c em.gro -r em.gro -p 1aki.top -o nvt.tpr
                 :-) GROMACS - gmx grompp, 2024.3-conda_forge (-:
@@ -487,7 +498,9 @@ Performance:      425.410        0.056
 
 GROMACS reminds you: "Alas, You're Welcome" (Prof. Dumbledore in Potter Puppet Pals)
 ```
+
 - 再次使用energy来分析温度的变化：在提示符处键入“16 0”以选择系统的温度并退出。
+
 ```term
 $ gmx energy -f nvt.edr -o temperature.xvg
                 :-) GROMACS - gmx energy, 2024.3-conda_forge (-:
@@ -528,18 +541,22 @@ Temperature                 300.134        0.1    3.27203   0.620947  (K)
 
 GROMACS reminds you: "You are wrong!" (NOFX)
 ```
-- 输入`xmgrace temperature.xvg `查看温度变化，生成的图应如下：从图中可以看出系统的温度迅速达到目标值（300 K）附近。
+
+- 输入`xmgrace temperature.xvg`查看温度变化，生成的图应如下：从图中可以看出系统的温度迅速达到目标值（300 K）附近。
+
 <div><img src="_media/2024-12-29-23-43-40.png" height="400px"></div>
 
 # NPT平衡
->GROMACS工具：grompp, mdrun, energy
+
+> GROMACS工具：grompp, mdrun, energy
 
 - 过程几乎与nvt平衡类似，进行100ps，开启位置限制。
 - 这里可以找到 [npt.mdp](https://aiwting.github.io/ms/files/1/npt.mdp) 文件，注意mdp文件中的一些变化
   - `continuation = yes`表示从NVT平衡阶段继续模拟
   - `gen_vel = no`表示从轨迹中读取速度
 - `-t`指定上一步生成的检查点文件.cpt，存储了上一步模拟过程中的完整状态信息。配合上述mdp文件的参数使用。
-- 这里可能会出现一个警告warning，在最新版本的GROMACS中会出现，不用管它，这是官方在推荐使用一种新的恒压方法。在命令最后添加`-maxwarn 1`重新运行。
+- 这里可能会出现一个警告warning，在最新版本的GROMACS中会出现，不用管它，这是官方在推荐使用一种新的恒压方法。在命令最后添加 `-maxwarn 1`重新运行。
+
 ```term
 $ gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p 1aki.top -o npt.tpr
 WARNING 1 [file npt.mdp]:
@@ -566,7 +583,9 @@ $ gmx grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p 1aki.top -o npt.tpr 
 $ gmx mdrun -deffnm npt
 ......
 ```
+
 - 再次使用energy来分析压强、密度的变化：
+
 ```term
 $ gmx energy -f npt.edr -o pressure.xvg
 ......
@@ -576,16 +595,20 @@ $ gmx energy -f npt.edr -o density.xvg
 ......
 $ 24 0
 ......
-``` 
-- 再次执行绘图命令`xmgrace pressure.xvg`，`xmgrace density.xvg`，压力和密度均很快达到平衡，表明系统现在在压力和密度方面平衡良好。
+```
+
+- 再次执行绘图命令 `xmgrace pressure.xvg`，`xmgrace density.xvg`，压力和密度均很快达到平衡，表明系统现在在压力和密度方面平衡良好。
 - 压力值在平衡阶段的过程中波动很大，但不用担心，压力是一个在MD模拟过程中波动很大的量。
+
 <div><img src="_media/2024-12-29-23-44-34.png" height="400px"><img src="_media/2024-12-29-23-45-41.png" height="400px"></div>
 
 # MD模拟
+
 - 在完成两个平衡阶段后，系统现在在所需的温度和压力下充分平衡。
-- 操作流程几乎类似npt平衡，区别在于关闭位置限制，因此不需要`-r`参数；继续从上一个模拟过程开始，因此`-t`指定上一个过程生成的cpt文件。
-- 动力学模拟的参数文件可以在这里找到 [md.mdp](https://aiwting.github.io/ms/files/1/md.mdp) 
-- 同样使用`-maxwarn 1`忽略压力平衡器的警告
+- 操作流程几乎类似npt平衡，区别在于关闭位置限制，因此不需要 `-r`参数；继续从上一个模拟过程开始，因此 `-t`指定上一个过程生成的cpt文件。
+- 动力学模拟的参数文件可以在这里找到 [md.mdp](https://aiwting.github.io/ms/files/1/md.mdp)
+- 同样使用 `-maxwarn 1`忽略压力平衡器的警告
+
 ```term
 $ gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p 1aki.top -o md0.tpr -maxwarn 1
                 :-) GROMACS - gmx grompp, 2024.3-conda_forge (-:
@@ -618,29 +641,41 @@ Performance:      624.522        0.038
 
 GROMACS reminds you: "Developer accused of unreadable code refuses to comment" (Molly Struve)
 ```
+
 **恭喜完成了一个完整的GROMACS模拟案例，接下来是简单的分析**
+
 # 后处理与分析
+
 ## 观察轨迹
-- 用VMD查看模拟轨迹，可以发现溶菌酶分子在水中的运动情况。  
+
+- 用VMD查看模拟轨迹，可以发现溶菌酶分子在水中的运动情况。
+
 <div><img src="_media/lyzwaterMD.gif" height=400px></div>
 
-## 轨迹文件处理
->GROMACS工具：trjconv
+- 由于做 MD 模拟时开启了去除蛋白质的质心平移(在 md.mdp 文件中), 溶菌酶分子几乎在盒子中心旋转而不会越出盒子边界.
 
-- 如果你的目标分子跑出盒子处于盒子边界处（这里不会因为mdp文件中设置消除了蛋白质的质心运动），需要`trjconv`来调整轨迹文件位置。
+## 轨迹文件处理
+
+> GROMACS工具：trjconv
+
+- 如果你的目标分子跑出盒子处于盒子边界处（这里不会因为mdp文件中设置消除了蛋白质的质心运动），需要 `trjconv`来调整轨迹文件位置。
+
 ```term
 // 这是示例，可以不执行
 $ gmx trjconv -s md0.tpr -f md0.xtc -o md0_noPBC.xtc -pbc mol -center
 // 选择1（“Protein”）作为要居中的组，选择0（“System”）作为输出。
 ```
-- 此外`trjconv`还可以转换轨迹文件格式，调整轨迹步数间隔，输出某一段的轨迹文件、输出某些步的结构文件等等。
+
+- 此外 `trjconv`还可以转换轨迹文件格式，调整轨迹步数间隔，输出某一段的轨迹文件、输出某些步的结构文件等等。
 
 ## 计算根均方偏差RMSD
->GROMACS工具：rms
+
+> GROMACS工具：rms
 
 - 蛋白质的RMSD反映了模拟的收敛性和蛋白的稳定性.
 - `rms` 计算模拟过程中的结构与初始结构的RMSD，程序会对结构进行最小二乘拟合并给出RMSD随时间的变化，将得到一个xvg文件，包含了RMSD随时间的变化。
 - `-tu`表示设置输出时间单位为 ns
+
 ```term
 // 以经过两步平衡后的结构为参考结构
 $ gmx rms -s md0.tpr -f md0.xtc -o rmsd.xvg -tu ns
@@ -652,16 +687,20 @@ $ 3 3
 // 然后用xmgrace绘图
 $ xmgrace rmsd.xvg rmsd_crystal.xvg
 ```
+
 - 结果看起来像这样：
 
 <div><img src="_media/2024-12-31-18-39-40.png" height=400px></div>
+
 - 可以看到RMSD很快稳定到一个较小的值，并在后续保持。这说明溶菌酶分子在水中结构非常稳定波动很小，且该模拟很容易达到平衡，与该晶体结构略有细微差异。
 
 ## 蛋白质回旋半径
->GROMACS工具：gyrate
+
+> GROMACS工具：gyrate
 
 - 蛋白质的回转半径是其致密性的衡量标准：回旋半径取决于某(些)原子质量与分子重心的关系, 因此可用于表征蛋白质结构的密实度。
 - 如果一个蛋白质是稳定折叠态，它将可能保持相对稳定的Rg值。如果一个蛋白质展开，它的Rg会随着时间的推移而改变。
+
 ```term
 $ gmx gyrate -s md0.tpr -f md0.xtc -o gyrate.xvg
 // 选择第1组（“Protein”）进行分析
@@ -669,7 +708,9 @@ $ 1
 // 绘图
 $ xmgrace gyrate.xvg
 ```
+
 - 从平稳的Rg值看出，溶菌酶在300 K 下 1 ns 的过程中保持非常稳定的折叠状态：
+
 <div><img src="_media/2024-12-31-21-26-06.png" height=400px></div>
 
-**至此，我们完成了水中溶菌酶的全部模拟！应该熟悉了GROMACS的基本模拟流程，一些常用的GROMACS工具（模块）及其命令。**
+**至此，我们完成了水中溶菌酶的全部模拟并进行了简单的分析！你应该熟悉了GROMACS的基本模拟流程，一些常用的GROMACS工具（模块）及其命令。**

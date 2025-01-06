@@ -5,7 +5,7 @@
   - [VMD的使用](useVMD.md)
   - [pymol的使用](usepymol.md)
   - [AmberTools的使用](ambertools.md)
-  - [gmx_MMPBSA的使用](mmpbsa.md)
+  - [MMPBSA的使用](mmpbsa.md)
   - [Cellulose-Builder的安装和使用](celluloseBuilder.md)
   - [Guassian的安装和使用](gauss.md)
   - [Materials Studio安装和介绍](materialsStudio.md)
@@ -15,9 +15,10 @@
 
 - 实践操作
   - [水中的溶菌酶](lyzInwater.md)
-  - 水中的甲烷
-  - 纤维素
-  - 真空中的石墨烯
+  - [水中的甲烷]
+  - [真空中的石墨烯]
+  - [蛋白质配体复合物]
+  - [纤维素]
 
 - 基础知识
   - [GNU/Linux](GNU_Linux.md)
@@ -30,4 +31,4 @@
   - [分子建模](model.md)
   - [分子对接](dock.md)
   - [统计物理学](statisticalPhysics.md)
-  - [化学数据库介绍](chemDatabase.md)
+  - [化学物质的计算机描述](chemDescribe.md)
