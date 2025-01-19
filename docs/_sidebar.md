@@ -3,7 +3,7 @@
   - [安装GROMACS](getGROMACS.md)
   - [安装VScode](vscode.md)
   - [VMD的使用](useVMD.md)
-  - [pymol的使用](usepymol.md)
+  - [PyMol的使用](usepymol.md)
   - [AmberTools的使用](ambertools.md)
   - [MMPBSA的使用](mmpbsa.md)
   - [Cellulose-Builder的安装和使用](celluloseBuilder.md)
@@ -15,10 +15,10 @@
 
 - 实践操作
   - [水中的溶菌酶](lyzInwater.md)
-  - [水中的甲烷]
-  - [真空中的石墨烯]
-  - [蛋白质配体复合物]
-  - [纤维素]
+  - [水中的甲烷](methaneInwater)
+  - [真空中的石墨烯](graphene)
+  - [蛋白质配体复合物](complex)
+  - [纤维素](cellulose)
 
 - 基础知识
   - [GNU/Linux](GNU_Linux.md)

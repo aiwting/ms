@@ -6,7 +6,7 @@
 
 - GROMACS
 - Amber
-- ......
+- Other Skills
 
 [Resource]()
 [Overview](README.md)

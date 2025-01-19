@@ -7,10 +7,10 @@
 GROMACS的版本和平台：
 
 - GROMACS更新很快，有多个版本：
-  - 支持CUDA加速的版本：需要nVidia独立显卡
-  - 支持并行计算的版：一般用于含多个处理器的计算服务器
-  - 单/双精度版本：一般计算单精度版本就够了
-- GROMACS是开源的，理论上可以编译到任何你想要的平台使用：Windows、Linux、Mac, 但最常用的是Linux平台。
+  - 支持CUDA加速的版本：需要 nVidia 独立显卡.
+  - 支持并行计算的版：一般用于含多个处理器(CPU)的计算服务器.
+  - 单/双精度版本：一般计算, 单精度版本就够了, 单精度版速度更快生成文件更小, 双精度版不支持GPU加速.
+- GROMACS是开源的，理论上可以编译到任何你想要的平台使用：Windows、Linux、Mac, 但最常用的是Linux平台.
 
 推荐：
 
@@ -63,10 +63,16 @@ conda activate
 
 ### 安装分子模拟程序包
 
-1. 运行命令 `conda search gromacs`可以产看有哪些 GROMACS 版本，输出如下：
+#### 只安装GROMACS
 
-|         | gromacs版本                                  |
-| ------- | -------------------------------------------- |
+- 运行命令 `conda search gromacs`可以产看有哪些 GROMACS 版本，部分输出如下：
+
+|         | gromacs版本                                        |
+| ------- | --------------------------------------------       |
+| gromacs | 2024.3 mpi_openmpi_cuda_he6b8466_1  conda-forge    |
+| gromacs | 2024.3 mpi_openmpi_dblprec_h8652d4b_1  conda-forge |
+| gromacs | mpi_openmpi_h9e48474_1  conda-forge          |
+| gromacs | 2024.3 nompi_h5f56185_101  conda-forge       |
 | gromacs | 2024.3 nompi_cuda_h5cb645a_0  conda-forge    |
 | gromacs | 2024.3 nompi_cuda_h5cb645a_1  conda-forge    |
 | gromacs | 2024.3 nompi_dblprec_h76c4001_0  conda-forge |
@@ -74,30 +80,56 @@ conda activate
 | gromacs | 2024.3 nompi_h5f56185_100  conda-forge       |
 | gromacs | 2024.3 nompi_h5f56185_101  conda-forge       |
 
-- 我们需要创建一个名为 ms 的环境，并安装对应的GROMACS版本：个人电脑安装nompi版，有nvidia显卡安装cuda版，没有dblprec表示单精度版（足够）。
+- 我们需要创建一个名为 gmx 的环境，并安装对应的GROMACS版本：个人电脑安装带nompi标识版，有nvidia显卡安装带cuda标识版，选择单精度版即不带dblprec标识版(计算速度更快体积更小)
 
 ```bash
-conda create -n ms python=3.9 -y
-conda activate ms
+conda create -n gmx
+conda activate gmx
+#下面两个版本选择一个, 区别在于有无独立显卡
 conda install gromacs=2024.3=nompi_cuda_h5cb645a_1
+conda install gromacs=2024.3=nompi_h5f56185_101
+#这个是并行版本(个人计算机不用安装)
+conda install gromacs=2024.3=mpi_openmpi_cuda_he6b8466_1
 ```
 
-2. 继续安装一些其它的分子模拟相关软件（可选）：
+#### 安装额外的模拟软件
+
+- **推荐使用此方式安装**, 一步到位, 几乎包含了所有你能用到的模拟程序.
+- 安装GROMACS及一些其它的分子模拟相关软件（可选）：注意安装顺序, 否则可能出现软件依赖关系错误!
 
 ```bash
-conda install gmx_mmpbsa=1.6.3 -y
-conda install apbs=1.5
-conda install pdb2pqr=3.6.1
-conda install pymol-open-source
-conda install vmd
-conda install vermouth
+#创建并激活环境
+conda create -n ms
+conda activate ms
+#安装gmx_mmpbsa及ambertools
+conda install gmx_mmpbsa=1.6.3 ambertools=23.6
+#安装GROMACS及LAMMPS(根据有无显卡选择一个适合的版本安装)
+conda install gromacs=2024.3=nompi_cuda_h5cb645a_1
+conda install gromacs=2024.3=nompi_h5f56185_101
+conda install lammps=2024.08.29=cuda118_py39_h23eba0e_nompi_0
+conda install lammps=2024.08.29=cpu_py39_h12dfb8d_nompi_0
+#安装结构文件可视化软件pymol及VMD
+conda install pymol-open-source vmd
+#安装静电势计算工具
+conda install apbs=1.5 pdb2pqr=3.6.1
+#安装二级结构计算工具
 conda install dssp
-conda install acpype
+#安装拓扑结构处理工具acpype, openbabel, vermouth
+conda install vermouth acpype openbabel
 ```
 
-- 如果你觉得上述过程还是麻烦，可以使用这里写好的文件：[ms_env.yml](https://aiwting.github.io/ms/files/ms_env.yml)，下载到工作目录, 然后运行下面的命令安装，可以代替上面 1、2 两个步骤: `conda env create --file env.yml`
+- 如果你觉得上述过程还是麻烦，可以使用这里写好的文件, 将他们复制保存到工作目录, 然后运行下面的命令安装, 可以代替上述命令步骤. 
+  - 有显卡选择: [ms_cuda_env.yml](https://aiwting.github.io/ms/files/ms_cuda_env.yml)
+  - 没有显卡选择: [ms_env.yml](https://aiwting.github.io/ms/files/ms_env.yml)
+  - `conda env create --file ms_cuda_env.yml`
+- 由于gmx_mmpbsa的依赖限制原因, 模拟软件都选择安装nompi版本, 如果需要mpi版本, 则不要将gmx_mmpbsa与模拟软件安装在一个环境中, 重新创建一个环境安装gmx_mmpbsa.
+  - 示例: `conda install lammps=2024.08.29=cuda118_py312_hfe4aceb_mpi_openmpi_0 ambertools=23.6=cuda_11.8_openmpi_py312h755114c_5 gromacs=2024.3=mpi_openmpi_cuda_he6b8466_1 nccl`
+- 安装过程需要联网下载, 需要耐心等待.
+- 如果不幸出现报错, 多半是一些依赖库缺失(lib文件缺失, lib链接错误, lib找不到打不开等等), 安装上即可.
 
-3. 设置默认激活ms环境: `conda config --set default_env ms`, 至此你可以在终端运行 `gmx`命令查看GROMACS是否成功安装，输出如下：
+#### 检查安装
+
+- 设置默认激活ms环境: `conda config --set default_env ms`, 至此你可以在终端运行 `gmx`命令查看GROMACS是否成功安装，输出如下：
 
 ```bash
 $ gmx

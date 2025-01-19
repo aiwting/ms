@@ -1,5 +1,3 @@
-@autoHeader:0
-
 # 引言
 
 > 目的：Materials Studio的简单介绍和安装

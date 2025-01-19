@@ -46,6 +46,7 @@ GROMACS reminds you: "If we knew what it was we were doing, it would not be call
 
 - 获得蛋白质结构文件，去[RCSB](https://www.rcsb.org/)网站下载溶菌酶的pdb文件，搜索PDB ID 1AKI >点击右侧“Download Files” >PDB Format，将得到"1aki.pdb"
 - 现在进入VScode，复制一份"1aki.pdb"文件并打开，可以看到包含了结晶水"HOH"，删除所有"HOH"所在行，命名为"1aki-h2o.pdb"
+  - Linux命令实现: `grep -v HOH 1aki.pdb > 1aki-h2o.pdb`
 - 注意检查蛋白质pdb文件结构，一个标准的蛋白质pdb文件包含了：文件标题 HEADER, 实验数据和元数据 REMARK, 残基序列 SEQRES, 二级和三级结构信息 HELIX SHEET, 晶体学信息 CRYST1, 二硫键 SSBOND, 原子坐标 ATOM, 非标准残基或配体的原子 HETATM, 原子之间的连接关系 CONECT, TER 用于标识链的结束, MODEL 用于多模型结构的描述等等.
 
 # 生成拓扑结构
@@ -118,7 +119,7 @@ The Amber99sb force field and the tip3p water model are used.
 GROMACS reminds you: "The Carpenter Goes Bang Bang" (The Breeders)
 ```
 
-- 现在使用VMD观察.top文件，在命令窗口输入 `pbc box`回车，会发现蛋白质没有完全在盒子内，接下来进行调整.
+- 现在使用VMD观察1aki.gro文件，在命令窗口输入 `pbc box`回车，会发现蛋白质没有完全在盒子内，接下来进行调整.
 
 # 调整模拟盒子
 
