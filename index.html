@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>Molecular Simulation</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+  <!-- 默认主题 -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <link rel="stylesheet" href="_css/adjust.css">
+  <!-- favicon -->
+  <link rel="shortcut icon" href="_media/icon.svg" type="image/x-icon">
+  <!-- 顶部导航栏 -->
+  <link rel="stylesheet" href="_css/navbar-fixed.css">
+  <!-- 代码动画 -->
+  <link rel="stylesheet" href="_css/termynal.css">
+  <link rel="stylesheet" href="_css/custom.css">
+</head>
+<body>
+  <!-- 加载页面等待时显示的内容 -->
+  <div id="app">加载中，请稍后...</div>
+
+  <script>
+    window.$docsify = {
+      name: 'Overview', // 侧边栏顶部的标题
+      //nameLink: '/docs/#/README', // 点击标题后的跳转地址
+      //notFoundPage: true, //// 加载_404.md
+      //logo: '/_media/h2o64.png', // 侧边栏左侧的logo
+      themeColor: '#3F51B5', // 主题颜色
+      loadSidebar: true, // 左侧边栏
+      autoHeader: true, // 添加文章标题
+      maxLevel: 6, // 最大标题层级
+      //subMaxLevel: 1, // 侧边栏展示文章最大标题层级
+      sidebarDisplayLevel: 4, // 默认展开的左侧栏层级
+      auto2top: true, // 切换页面后跳回页面顶部
+      coverpage: true, // 封面
+      homepage: 'README.md', // 指定开始页
+      onlyCover: false, // 只在访问主页时加载封面
+      loadNavbar: true, // 导航栏
+      topMargin: 60, //调整跳转位置的偏移，避免被导航栏挡住
+      auto2top: true,
+      mergeNavbar: true, // 在小屏幕上，导航栏将与侧边栏合并
+// docsify-copy-code (defaults)
+      copyCode: {
+        buttonText: 'Copy',
+        errorText: 'Error',
+        successText: 'Copied',
+      },
+// 选项卡/标签卡 使用说明 https://jhildenbiddle.github.io/docsify-tabs/#/
+      tabs: {
+          persist: true, // default
+          sync: true, // default
+          theme: 'classic', // default
+          tabComments: true, // default
+          tabHeadings: true // default
+        },
+// 搜索
+      search: {
+          maxAge: 86400000,
+          paths: 'auto',
+          placeholder: '搜索',
+          noData: '找不到结果',
+          depth: 4,
+          hideOtherSidebarContent: false,
+          namespace: 'ms'
+      },
+// 回到顶部
+      scrollToTop: {
+        auto: true, // 自动隐藏按钮
+        //text: 'Top',
+        icon: 'arrow-up-1',
+        right: 10,
+        bottom: 15,
+        width: 40,
+        height: 40,
+        offset: 500 // 页面垂直滚动条的偏移量大于该属性值时显示按钮
+      },
+// 页脚
+      footer: {
+              copy: '<span>&copy; 2024</span>',
+              auth: 'Published by aiwting',
+              //pre: '<hr/>',
+              style: 'text-align: right;',
+              class: 'className',
+      },    
+// 更新时间
+      timeUpdater: {
+          text: "<div dispaly:block align='right' width='200px' style='color:gray;font-size:12px'>-----------last update time:&emsp;{docsify-updated} </div>",
+          formatUpdated: "{YYYY}/{MM}",
+          whereToPlace: "bottom",  // "top" or "bottom", default to "bottom"
+        },
+// 右侧目录
+      toc: {
+          tocMaxLevel: 5,
+          target: "h1, h2, h3, h4, h5, h6",
+          ignoreHeaders:  ['<!-- {docsify-ignore} -->', '<!-- {docsify-ignore-all} -->'],
+        },
+// 文档加密
+      auth: {
+        enable: false, // 是否开启
+        use: "sha256",
+        password: "d8d8a6d2e9e1fb99302b479a8fe540d4", // md5密码
+        title: "请输入密码以访问文档：", // 设置标题
+        paths: [""] // 需要认证的路径，支持正则表达式匹配
+      },
+// 标题编号
+      autoHeaders: {
+        // Separator for header numbering (e.g., '.', '-', ')')
+        separator: '.',
+        // Boolean indicating if headers should be added to the sidebar
+        sidebar: true,
+        // Number of header levels to include (1 to 6) or an object with start and finish properties
+        levels: 6,
+        // levels: { start: 1, finish: 6 }
+        // Boolean to enable or disable debug messages
+        debug: false,
+      },
+// 代码动画
+      plugins: [
+            function (hook, vm) {
+                /*termynal.js*/
+                hook.beforeEach(function(content){
+                    return beforeEach(content);
+                })
+                hook.doneEach(function (){
+                    setupTermynal();
+                    showRandomAnnouncement('announce-left', 5000)
+                    showRandomAnnouncement('announce-right', 10000)
+                });
+            }
+        ],
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <!-- or <script src="https://cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script> -->
+  <!-- 图片放大 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <!-- 复制代码块 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <!-- 数学方程 -->
+  <script src="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
+  <script src="//cdn.jsdelivr.net/npm/marked@4"></script>
+  <!-- CDN files for docsify-katex -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
+  <!-- or <script src="//cdn.jsdelivr.net/gh/upupming/docsify-katex@latest/dist/docsify-katex.js"></  script> -->
+  <!-- 搜索 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <!-- 选项卡/标签卡 docsify-tabs (latest v1.x.x) -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+  <!-- 左侧边栏折叠 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script> 
+  <!-- 右侧目录 -->
+  <link rel="stylesheet" href="_css/right-toc.css">
+  <script src="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/docsify-plugin-toc.min.js"></script>
+  <!-- 代码显示优化 teriminal https://github.com/dolanmiu/docsify-terminal-block -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-terminal-block@1.0.3"></script>
+  <!-- 代码动画 term https://github.com/sxin0/docsify-termynal -->
+  <script src="_js/termynal.js"></script>
+  <script src="_js/custom.js"></script>
+  <!-- 回到顶部 -->
+  <script src="//unpkg.com/@zhg-x/docsify-plugins@1.0.2/src/scroll-to-top.js"></script>
+  <!-- 页脚 -->
+  <script src="//unpkg.com/docsify-footer-enh/dist/docsify-footer-enh.min.js"></script>
+  <!-- 更新时间 -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-updated/src/time-updater.min.js"></script>
+  <!-- 分页 --> <!-- slide:break-# -->
+  <script src="//unpkg.com/docsify-slides/dist/docsify-slides.min.js"></script>
+  <!-- 文档加密 -->
+  <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/build/sha256.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-auth@1.2.0/dist/docsify-auth.min.js"></script>
+  <!-- 文档编号 https://github.com/markbattistella/docsify-auto-headers -->
+  <script src="https://cdn.jsdelivr.net/npm/@markbattistella/docsify-autoheaders@latest"></script>
+  <!-- 暗模式 -->
+  <script src="_js/dark-switcher.js"></script>
+  <style>
+  :root {
+    --dark-base-background: #222;
+    --dark-base-color: #bbc0c4;
+    --dark-theme-color: var(--theme-color, #42b983);
+    --dark-code-color: var(--dark-color);
+    --dark-heading-color: var(--dark-theme-color);
+    --dark-cover-background: #000000a8;
+    --dark-code-background: #303030;
+    --dark-tip-background: #2c0000;
+    --dark-warn-background: #005842;
+    --dark-icon-size: 25px;
+    --dark-icon-transition: .1s ease-in-out .1s;
+    --dark-moon-color: #000000;
+    --dark-sun-color: #ffffff;
+    --dark-moon-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 16 16'%3E%3Cpath fill='currentColor' d='M9.598 1.591a.749.749 0 0 1 .785-.175 7.001 7.001 0 1 1-8.967 8.967.75.75 0 0 1 .961-.96 5.5 5.5 0 0 0 7.046-7.046.75.75 0 0 1 .175-.786m1.616 1.945a7 7 0 0 1-7.678 7.678 5.499 5.499 0 1 0 7.678-7.678'/%3E%3C/svg%3E");
+    --dark-sun-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 16 16'%3E%3Cpath fill='currentColor' d='M8 12a4 4 0 1 1 0-8a4 4 0 0 1 0 8m0-1.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5m5.657-8.157a.75.75 0 0 1 0 1.061l-1.061 1.06a.749.749 0 0 1-1.275-.326a.749.749 0 0 1 .215-.734l1.06-1.06a.75.75 0 0 1 1.06 0Zm-9.193 9.193a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0M8 0a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V.75A.75.75 0 0 1 8 0M3 8a.75.75 0 0 1-.75.75H.75a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 3 8m13 0a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 16 8m-8 5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 13m3.536-1.464a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061M2.343 2.343a.75.75 0 0 1 1.061 0l1.06 1.061a.751.751 0 0 1-.018 1.042a.751.751 0 0 1-1.042.018l-1.06-1.06a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E");
+  }
+  </style>
+  <!-- 暗模式 -->
+</body>
+</html>
